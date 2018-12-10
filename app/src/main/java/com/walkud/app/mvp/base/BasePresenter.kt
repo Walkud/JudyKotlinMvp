@@ -20,7 +20,7 @@ open class BasePresenter<V : Any, out M> : ViewLifecycle() {
     var view: V by Delegates.notNull()
 
     /**
-     * 业务模型，即XXXModel
+     * 业务模型，即XXXModel，这里使用java反射(kotlin反射太慢，暂时不建议使用)创建示例，省去在每个Presenter中创建实例
      */
     val model: M by lazy {
         ReflectionUtils.getSuperClassGenricType<M>(this, 1)
