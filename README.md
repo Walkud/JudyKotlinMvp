@@ -37,7 +37,7 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
 
 ## 效果图
 
-<img src="./material/JudyKotlinMvpGif.gif" width="50%">
+<img src="./material/JudyKotlinMvpGif.gif" width="30%">
 
 
 ## 接入的第三方开源库
