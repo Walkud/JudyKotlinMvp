@@ -12,6 +12,7 @@ android {
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
+        multiDexEnabled true
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -68,6 +69,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:multidex:1.0.3'
     // Support库
     implementation rootProject.ext.supportLibs
     // 网络请求库
@@ -121,5 +123,11 @@ dependencies {
     implementation(rootProject.ext.rxLifecycle.rxlifecycleComponents) {
         exclude group: 'androidx.appcompat'
     }
+
+    //Facebook内存泄漏检测库
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
+    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
+    // Optional, if you use support library fragments:
+    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
 
 }
