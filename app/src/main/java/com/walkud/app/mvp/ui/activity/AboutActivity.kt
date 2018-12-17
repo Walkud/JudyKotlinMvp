@@ -40,7 +40,7 @@ class AboutActivity : MvcActivity() {
 
         //点击访问 GitHub
         relayout_gitHub.setOnClickListener {
-            val uri = Uri.parse("https://github.com/Walkud/KotlinMvp")
+            val uri = Uri.parse("https://github.com/Walkud/JudyKotlinMvp")
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
         }

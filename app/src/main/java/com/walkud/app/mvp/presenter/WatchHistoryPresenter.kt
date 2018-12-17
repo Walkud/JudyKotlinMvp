@@ -1,6 +1,5 @@
 package com.walkud.app.mvp.presenter
 
-import com.trello.rxlifecycle2.android.ActivityEvent
 import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
 import com.walkud.app.mvp.model.bean.HomeBean
@@ -22,7 +21,7 @@ class WatchHistoryPresenter : BasePresenter<WatchHistoryActivity, MainModel>() {
         model.getWatchHistory()
                 .compose(NetTransformer())
                 .compose(view.getMultipleStatusViewTransformer())
-                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .compose(bindUntilOnDestroyEvent())
                 .subscribe(object : RxSubscribe<ArrayList<HomeBean.Issue.Item>>() {
                     override fun call(result: ArrayList<HomeBean.Issue.Item>) {
                         view.updateListUi(result)

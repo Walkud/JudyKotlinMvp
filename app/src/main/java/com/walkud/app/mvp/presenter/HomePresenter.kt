@@ -27,7 +27,7 @@ class HomePresenter : BasePresenter<HomeFragment, MainModel>() {
         model.getFirstHomeData()
                 .compose(NetTransformer())
                 .compose(transformer)
-                .compose(bindFragmentUntilEvent(FragmentEvent.DESTROY))
+                .compose(bindFragmentUntilEvent(FragmentEvent.DESTROY))//自己指定绑定的声明周期，缺点是UI的类型(比如Activity或Fragment)切换会导致错误
                 .subscribe(object : RxSubscribe<HomeBean>() {
                     override fun call(result: HomeBean) {
                         homeBean = result
@@ -51,7 +51,7 @@ class HomePresenter : BasePresenter<HomeFragment, MainModel>() {
     fun loadMoreListData() {
         model.getMoreHomeData(nextPageUrl!!).compose(NetTransformer())
                 .compose(view.getSmartRefreshTransformer())
-                .compose(bindFragmentUntilEvent(FragmentEvent.DESTROY))
+                .compose(bindUntilOnDestroyEvent())//父类封装判断声明周期，缺点是需要对所需的生命周期都需要判断和封装
                 .subscribe(object : RxSubscribe<HomeBean>() {
                     override fun call(result: HomeBean) {
 

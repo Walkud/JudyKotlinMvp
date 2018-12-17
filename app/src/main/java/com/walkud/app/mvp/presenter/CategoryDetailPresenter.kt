@@ -1,6 +1,5 @@
 package com.walkud.app.mvp.presenter
 
-import com.trello.rxlifecycle2.android.ActivityEvent
 import com.walkud.app.common.ExtraKey
 import com.walkud.app.common.exception.ExceptionHandle
 import com.walkud.app.mvp.base.BasePresenter
@@ -45,7 +44,7 @@ class CategoryDetailPresenter : BasePresenter<CategoryDetailActivity, MainModel>
         model.getCategoryDetailList(categoryData.id)
                 .compose(NetTransformer())
                 .compose(view.getMultipleStatusViewTransformer())
-                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .compose(bindUntilOnDestroyEvent())
                 .subscribe(object : RxSubscribe<HomeBean.Issue>() {
                     override fun call(result: HomeBean.Issue) {
                         issue = result
@@ -62,7 +61,7 @@ class CategoryDetailPresenter : BasePresenter<CategoryDetailActivity, MainModel>
     fun queryMoreCategoryData() {
         model.getMoreCategoryData(nextPageUrl!!)
                 .compose(NetTransformer())
-                .compose(bindUntilEvent(ActivityEvent.DESTROY))
+                .compose(bindUntilOnDestroyEvent())
                 .subscribe(object : RxSubscribe<HomeBean.Issue>() {
 
                     override fun call(result: HomeBean.Issue) {
