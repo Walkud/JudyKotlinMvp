@@ -93,10 +93,10 @@ object RetrofitManager {
     private fun getRetrofit(): Retrofit {
         // 获取retrofit的实例
         return Retrofit.Builder()
-                .baseUrl(UrlConstant.BASE_URL)  //自己配置
-                .client(getOkHttpClient())
-                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
-                .addConverterFactory(GsonConverterFactory.create())
+                .baseUrl(UrlConstant.BASE_URL)  //BaseUrl，必须以/结尾
+                .client(getOkHttpClient())//设置OkHttpClient
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())//设置网络请求适配器，可设置多个
+                .addConverterFactory(GsonConverterFactory.create())//设置数据转换及序列化工厂，可设置多个
                 .build()
 
     }
