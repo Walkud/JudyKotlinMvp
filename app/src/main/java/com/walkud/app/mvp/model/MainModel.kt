@@ -20,6 +20,10 @@ class MainModel {
 
     /**
      * 获取首页 Banner 数据
+     * 这个方法主要做了三件事，构建出 P 所需要的数据接口，以后接口合并可只修改这一处
+     * 1、先请求Banner数据
+     * 2、过滤掉 Banner2(包含广告,等不需要的 Type)
+     * 3、根据 nextPageUrl 请求下一页数据
      */
     fun getFirstHomeData(): Observable<HomeBean> {
         return RetrofitManager.service.getFirstHomeData(1)//1、先请求Banner数据

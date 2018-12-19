@@ -40,7 +40,7 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
     private var loadingMore = false
     private val listAdapter: CategoryDetailAdapter = CategoryDetailAdapter()
 
-    override fun getP(): SearchPresenter = SearchPresenter().apply { view = this@SearchActivity }
+    override fun getP() = SearchPresenter().apply { view = this@SearchActivity }
 
     override fun getLayoutId() = R.layout.activity_search
 
@@ -196,7 +196,7 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
 
         listAdapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
             val item = adapter.getItem(position) as HomeBean.Issue.Item
-            VideoDetailActivity.startActivity(this@SearchActivity,view,item)
+            VideoDetailActivity.startActivity(this@SearchActivity, view, item)
         }
 
     }
