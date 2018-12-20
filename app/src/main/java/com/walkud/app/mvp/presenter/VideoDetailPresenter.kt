@@ -97,6 +97,7 @@ class VideoDetailPresenter : BasePresenter<VideoDetailActivity, MainModel>() {
         model.getRelatedData(id)
                 .compose(NetTransformer())
                 .compose(view.getSmartRefreshTransformer())
+                .compose(bindUntilOnDestroyEvent())
                 .subscribe(object : RxSubscribe<HomeBean.Issue>() {
                     override fun call(result: HomeBean.Issue) {
                         //添加当前视频相关数据
