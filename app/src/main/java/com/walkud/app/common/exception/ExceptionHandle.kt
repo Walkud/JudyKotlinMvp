@@ -29,6 +29,7 @@ class ExceptionHandle {
                 is ParseException -> "数据解析异常"
                 is ApiException -> e.message.toString()
                 is IllegalArgumentException -> "参数错误"
+                is SubscribeException -> "跑偏了，稍后请重试!"
                 else -> "未知错误，可能抛锚了吧~"
             }
 
