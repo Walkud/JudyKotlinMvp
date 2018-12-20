@@ -33,8 +33,7 @@ class SearchPresenter : BasePresenter<SearchActivity, MainModel>() {
 
                     override fun onError(e: Throwable) {
                         super.onError(e)
-                        view.showToast(ExceptionHandle.handleException(e))
-                        view.showError(ExceptionHandle.errorCode)
+                        view.showToast(ExceptionHandle.handleExceptionMsg(e))
                     }
                 })
     }
@@ -61,8 +60,7 @@ class SearchPresenter : BasePresenter<SearchActivity, MainModel>() {
 
                     override fun onError(e: Throwable) {
                         super.onError(e)
-                        view.showToast(ExceptionHandle.handleException(e))
-                        view.showError(ExceptionHandle.errorCode)
+                        view.showToast(ExceptionHandle.handleExceptionMsg(e))
                     }
                 })
     }
@@ -79,11 +77,6 @@ class SearchPresenter : BasePresenter<SearchActivity, MainModel>() {
                         issue!!.itemList.addAll(result.itemList)
                         nextPageUrl = result.nextPageUrl
                         view.updateSearchResultUi(issue!!, keyWords!!)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        super.onError(e)
-                        view.showError(ExceptionHandle.errorCode)
                     }
                 })
     }

@@ -7,7 +7,6 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.hazz.kotlinmvp.net.exception.ErrorStatus
 import com.walkud.app.R
 import com.walkud.app.common.ExtraKey
 import com.walkud.app.mvp.base.MvpFragment
@@ -95,16 +94,5 @@ class CategoryFragment : MvpFragment<CategoryPresenter>() {
      */
     fun updateListUi(categoryList: ArrayList<CategoryBean>) {
         categoryAdapter.setNewData(categoryList)
-    }
-
-    /**
-     * 显示错误UI
-     */
-    fun showErrorUi(errorCode: Int) {
-        if (errorCode == ErrorStatus.NETWORK_ERROR) {
-            multipleStatusView?.showNoNetwork()
-        } else {
-            multipleStatusView?.showError()
-        }
     }
 }

@@ -1,7 +1,6 @@
 package com.walkud.app.mvp.presenter
 
 import com.trello.rxlifecycle2.android.FragmentEvent
-import com.walkud.app.common.exception.ExceptionHandle
 import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
 import com.walkud.app.mvp.model.bean.CategoryBean
@@ -27,13 +26,6 @@ class CategoryPresenter : BasePresenter<CategoryFragment, MainModel>() {
                     override fun call(result: ArrayList<CategoryBean>) {
                         //更新UI列表
                         view.updateListUi(result)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        super.onError(e)
-                        //处理错误
-                        ExceptionHandle.handleException(e)
-                        view.showErrorUi(ExceptionHandle.errorCode)
                     }
                 })
     }

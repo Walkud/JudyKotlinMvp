@@ -16,7 +16,6 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.flexbox.*
-import com.hazz.kotlinmvp.net.exception.ErrorStatus
 import com.walkud.app.R
 import com.walkud.app.common.extensions.closeKeyBoard
 import com.walkud.app.common.extensions.openKeyBoard
@@ -199,17 +198,6 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
             VideoDetailActivity.startActivity(this@SearchActivity, view, item)
         }
 
-    }
-
-    /**
-     * 显示错误信息
-     */
-    fun showError(errorCode: Int) {
-        if (errorCode == ErrorStatus.NETWORK_ERROR) {
-            multipleStatusView.showNoNetwork()
-        } else {
-            multipleStatusView.showError()
-        }
     }
 
     /**

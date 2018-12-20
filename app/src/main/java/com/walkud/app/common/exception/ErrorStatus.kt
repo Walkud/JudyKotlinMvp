@@ -35,4 +35,9 @@ object ErrorStatus {
     @JvmField
     val API_ERROR = 1005
 
+    /**
+     * 本地逻辑错误 （包括服务器返回的数据问题引起的错误）
+     */
+    val LCOAL_LOGIC_ERROR = 1006
+
 }

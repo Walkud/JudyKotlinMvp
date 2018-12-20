@@ -1,12 +1,14 @@
 package com.walkud.app.rx
 
 import android.os.Looper
-import com.orhanobut.logger.Logger
+import com.walkud.app.common.exception.SubscribeException
+import com.walkud.app.utils.MLog
 import io.reactivex.Observer
 import io.reactivex.disposables.Disposable
 
 /**
  * 二次封装Subscriber
+ * 统一处理异常
  * Created by Zhuliya on 2018/11/8
  */
 abstract class RxSubscribe<T> : Observer<T> {
@@ -21,12 +23,12 @@ abstract class RxSubscribe<T> : Observer<T> {
         try {
             call(t)
         } catch (e: Exception) {
-            onError(e)
+            onError(SubscribeException(e))
         }
     }
 
     override fun onError(e: Throwable) {
-        Logger.e("isUiThread:${Looper.getMainLooper() == Looper.myLooper()}", e)
+        MLog.e("isUiThread:${Looper.getMainLooper() == Looper.myLooper()}", e)
     }
 
     abstract fun call(result: T)

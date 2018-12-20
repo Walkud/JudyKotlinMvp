@@ -30,6 +30,7 @@ import com.walkud.app.mvp.presenter.VideoDetailPresenter
 import com.walkud.app.mvp.ui.adapter.VideoDetailAdapter
 import com.walkud.app.rx.transformer.SmartRefreshTransformer
 import com.walkud.app.utils.CleanLeakUtils
+import com.walkud.app.utils.MLog
 import com.walkud.app.utils.StatusBarUtil
 import com.walkud.app.view.VideoListener
 import io.reactivex.ObservableTransformer
@@ -139,7 +140,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
 
             override fun onAutoComplete(url: String, vararg objects: Any) {
                 super.onAutoComplete(url, *objects)
-                Logger.d("***** onAutoPlayComplete **** ")
+                MLog.d("***** onAutoPlayComplete **** ")
             }
 
             override fun onPlayError(url: String, vararg objects: Any) {
@@ -149,12 +150,12 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
 
             override fun onEnterFullscreen(url: String, vararg objects: Any) {
                 super.onEnterFullscreen(url, *objects)
-                Logger.d("***** onEnterFullscreen **** ")
+                MLog.d("***** onEnterFullscreen **** ")
             }
 
             override fun onQuitFullscreen(url: String, vararg objects: Any) {
                 super.onQuitFullscreen(url, *objects)
-                Logger.d("***** onQuitFullscreen **** ")
+                MLog.d("***** onQuitFullscreen **** ")
                 //列表返回的样式判断
                 orientationUtils?.backToProtVideo()
             }
@@ -228,7 +229,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
             }
 
             override fun onTransitionEnd(p0: Transition?) {
-                Logger.d("onTransitionEnd()------")
+                MLog.d("onTransitionEnd()------")
 
                 presenter.refreshVideoInfo()
                 transition?.removeListener(this)
@@ -242,7 +243,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
      * 设置播放视频 URL
      */
     fun setVideo(url: String) {
-        Logger.d("playUrl:$url")
+        MLog.d("playUrl:$url")
         mVideoView.setUp(url, false, "")
         //开始自动播放
         mVideoView.startPlayLogic()

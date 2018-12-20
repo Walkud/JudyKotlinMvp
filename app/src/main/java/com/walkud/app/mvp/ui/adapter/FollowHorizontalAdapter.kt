@@ -8,6 +8,7 @@ import com.orhanobut.logger.Logger
 import com.walkud.app.R
 import com.walkud.app.common.extensions.durationFormat
 import com.walkud.app.mvp.model.bean.HomeBean
+import com.walkud.app.utils.MLog
 
 /**
  * 关注Item 水平列表Adapter
@@ -34,15 +35,11 @@ class FollowHorizontalAdapter(layoutResId: Int = R.layout.item_follow_horizontal
         val timeFormat = durationFormat(data?.duration)
 
         //标签
-        Logger.d("horizontalItemData===title:${data?.title}tag:${data?.tags?.size}")
+        MLog.d("horizontalItemData===title:${data?.title}tag:${data?.tags?.size}")
         if (data?.tags != null && data.tags.size > 0) {
             helper.setText(R.id.tv_tag, "#${data.tags[0].name} / $timeFormat")
         } else {
             helper.setText(R.id.tv_tag, "#$timeFormat")
         }
-
-//        setOnItemClickListener(listener = android.view.View.OnClickListener {
-//            //                goToVideoPlayer(mContext as Activity, holder.getView(R.id.iv_cover_feed), data)
-//        })
     }
 }

@@ -31,8 +31,7 @@ class MultipleStatusViewTransformer<T>(private var multipleStatusView: MultipleS
      * 加载错误,显示异常布局
      */
     private fun onError(e: Throwable) {
-        ExceptionHandle.handleException(e)
-        if (ExceptionHandle.errorCode == ErrorStatus.NETWORK_ERROR) {
+        if (ExceptionHandle.isExceptionCode(e, ErrorStatus.NETWORK_ERROR)) {
             multipleStatusView?.showNoNetwork()
         } else {
             multipleStatusView?.showError()

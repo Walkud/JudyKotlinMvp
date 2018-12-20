@@ -40,7 +40,7 @@ class HomePresenter : BasePresenter<HomeFragment, MainModel>() {
 
                     override fun onError(e: Throwable) {
                         super.onError(e)
-                        view.showToast(ExceptionHandle.handleException(e))
+                        view.showToast(ExceptionHandle.handleExceptionMsg(e))
                     }
                 })
     }
@@ -63,7 +63,7 @@ class HomePresenter : BasePresenter<HomeFragment, MainModel>() {
 
                     override fun onError(e: Throwable) {
                         super.onError(e)
-                        view.showToast(ExceptionHandle.handleException(e))
+                        view.showToast(ExceptionHandle.handleExceptionMsg(e))
                     }
                 })
     }
