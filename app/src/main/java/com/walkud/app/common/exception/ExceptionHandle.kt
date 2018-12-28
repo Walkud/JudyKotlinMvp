@@ -7,6 +7,7 @@ import com.orhanobut.logger.Logger
 import org.json.JSONException
 import java.net.ConnectException
 import java.net.SocketTimeoutException
+import java.net.UnknownHostException
 import java.text.ParseException
 
 /**
@@ -22,6 +23,7 @@ class ExceptionHandle {
          */
         fun handleExceptionMsg(e: Throwable): String {
             val errorMsg = when (e) {
+                is UnknownHostException,
                 is SocketTimeoutException,
                 is ConnectException -> "网络连接异常"
                 is JsonParseException,
@@ -42,6 +44,7 @@ class ExceptionHandle {
          * 判断并返回异常对应的Code
          */
         private fun handleExceptionCode(e: Throwable) = when (e) {
+            is UnknownHostException,
             is SocketTimeoutException,
             is ConnectException -> ErrorStatus.NETWORK_ERROR //网络错误
             is JsonParseException,

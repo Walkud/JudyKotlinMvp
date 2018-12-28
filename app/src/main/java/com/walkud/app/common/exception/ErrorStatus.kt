@@ -3,41 +3,37 @@ package com.hazz.kotlinmvp.net.exception
 /**
  * Created by xuhao on 2017/12/5.
  * desc:
+ * Modified by Zhuly on 2018/12/28
  */
 object ErrorStatus {
     /**
      * 响应成功
      */
-    @JvmField
-    val SUCCESS = 0
+    const val SUCCESS = 0
 
     /**
      * 未知错误
      */
-    @JvmField
-    val UNKNOWN_ERROR = 1002
+    const val UNKNOWN_ERROR = 1002
 
     /**
      * 服务器内部错误
      */
-    @JvmField
-    val SERVER_ERROR = 1003
+    const val SERVER_ERROR = 1003
 
     /**
      * 网络连接超时
      */
-    @JvmField
-    val NETWORK_ERROR = 1004
+    const val NETWORK_ERROR = 1004
 
     /**
      * API解析异常（或者第三方数据结构更改）等其他异常
      */
-    @JvmField
-    val API_ERROR = 1005
+    const val API_ERROR = 1005
 
     /**
      * 本地逻辑错误 （包括服务器返回的数据问题引起的错误）
      */
-    val LCOAL_LOGIC_ERROR = 1006
+    const val LCOAL_LOGIC_ERROR = 1006
 
 }
