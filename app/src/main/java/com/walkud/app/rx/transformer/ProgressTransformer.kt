@@ -10,6 +10,7 @@ import io.reactivex.subjects.PublishSubject
 import io.reactivex.subjects.Subject
 
 /**
+ * 统一的弹框转圈进度框事务
  * Created by Zhuliya on 2018/11/21
  */
 class ProgressTransformer<T>(activity: Activity) : ObservableTransformer<T, T> {
@@ -21,7 +22,7 @@ class ProgressTransformer<T>(activity: Activity) : ObservableTransformer<T, T> {
     init {
         progressDialog = ProgressDialog(activity)
         progressDialog?.setOnCancelListener {
-            subject.onNext(true)
+            subject.onNext(true)//如果取消隐藏当前Dialog，则解除订阅关系
         }
     }
 
@@ -43,10 +44,16 @@ class ProgressTransformer<T>(activity: Activity) : ObservableTransformer<T, T> {
                 }
     }
 
+    /**
+     * 显示进度框
+     */
     private fun show() {
         progressDialog?.show()
     }
 
+    /**
+     * 隐藏进度框
+     */
     private fun dismiss() {
         progressDialog?.dismiss()
         progressDialog = null

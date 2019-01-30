@@ -28,7 +28,7 @@ abstract class MvcFragment : RxFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
         // 避免多次从xml中加载布局文件
         if (mContentView == null) {
-            mContentView = LayoutInflater.from(activity).inflate(getLayoutId(), null)
+            mContentView = LayoutInflater.from(activity!!).inflate(getLayoutId(), null)
         } else {
             mContentView!!.parent?.let {
                 (it as ViewGroup).removeView(mContentView)
