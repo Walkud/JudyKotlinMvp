@@ -23,6 +23,8 @@ class MultipleStatusViewTransformer<T>(private var multipleStatusView: MultipleS
                     onError(it)
                 }.doOnNext {
                     doOnNext()
+                }.doOnComplete {
+                    setViewNull()
                 }
 
     }
@@ -36,7 +38,7 @@ class MultipleStatusViewTransformer<T>(private var multipleStatusView: MultipleS
         } else {
             multipleStatusView?.showError()
         }
-        multipleStatusView = null
+        setViewNull()
     }
 
     /**
@@ -44,6 +46,12 @@ class MultipleStatusViewTransformer<T>(private var multipleStatusView: MultipleS
      */
     private fun doOnNext() {
         multipleStatusView?.showContent()
+    }
+
+    /**
+     * 置空
+     */
+    private fun setViewNull(){
         multipleStatusView = null
     }
 

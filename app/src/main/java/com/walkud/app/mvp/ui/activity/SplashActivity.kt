@@ -64,7 +64,9 @@ class SplashActivity : MvcActivity() {
      */
     @PermissionGrant(PERMISSION_CODE)
     fun requestWriteExternalStorageForUploadSuccess() {
-        iv_web_icon.startAnimation(alphaAnimation)
+        alphaAnimation?.let {
+            iv_web_icon.startAnimation(it)
+        }
     }
 
     /**
@@ -82,5 +84,11 @@ class SplashActivity : MvcActivity() {
         super.recheckPermissions()
         MPermissions.requestPermissions(this, PERMISSION_CODE,
                 Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        alphaAnimation?.cancel()
+        alphaAnimation = null
     }
 }
