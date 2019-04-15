@@ -1,8 +1,10 @@
 # JudyKotlinMvp
 
+[![](https://img.shields.io/badge/DownloadApk-1.3.0-blue.svg)](https://www.pgyer.com/x2An)
+
 ## 首先声明
 
-本项目是参考 [git-xuhao/KotlinMvp](https://github.com/git-xuhao/KotlinMvp) ，对原项目Mvp代码及Adapter代码按照自己的想法进行了重构，布局 (xml) 文件(除 fragment_mine.xml )、工具类、自定义 View 都直接使用的原项目的文件，本项目的主要目的是为了 Kotlin 学习，将自己对Java版 Mvp的理解用 Kotlin 实现。
+本项目是参考 [git-xuhao/KotlinMvp](https://github.com/git-xuhao/KotlinMvp) ，对原项目 Mvp 代码及 Adapter 代码按照自己的想法进行了重构，布局 (xml) 文件(除 fragment_mine.xml )、工具类、自定义 View 都直接使用的原项目的文件，本项目的主要目的是为了 Kotlin 学习，将自己对 Java 版 Mvp 的理解用 Kotlin 实现。
 
 ## 说明
 
