@@ -12,6 +12,34 @@ import java.lang.reflect.Field
 
 object CleanLeakUtils {
 
+    private var lastSrvViewField: Field? = null
+
+    /**
+     * 修复内存泄漏，通过反射将 InputMethodManager mLastSrvView 成员属性设置为 null
+     */
+    fun fixLeak(context: Context) {
+        val imm = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+
+        val arr = arrayOf("mLastSrvView")
+        for (param in arr) {
+            try {
+                if (lastSrvViewField == null) {
+                    lastSrvViewField = InputMethodManager::class.java.getDeclaredField(param)
+                }
+
+                lastSrvViewField?.apply {
+                    lastSrvViewField!!.setAccessible(true)
+                    lastSrvViewField!!.set(imm, null)
+                }
+            } catch (t: Throwable) {
+                t.printStackTrace()
+            }
+        }
+    }
+
+    /**
+     * 修复 InputMethodManager 内存泄漏问题
+     */
     fun fixInputMethodManagerLeak(destContext: Context?) {
         if (destContext == null) {
             return

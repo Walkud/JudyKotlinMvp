@@ -12,6 +12,7 @@ import com.walkud.app.R
 import com.walkud.app.common.extensions.closeKeyBoard
 import com.walkud.app.rx.transformer.EmptyTransformer
 import com.walkud.app.rx.transformer.ProgressTransformer
+import com.walkud.app.utils.CleanLeakUtils
 import com.zhy.m.permission.MPermissions
 import io.reactivex.ObservableTransformer
 
@@ -172,4 +173,10 @@ abstract class MvcActivity : RxAppCompatActivity() {
      * 获取进度、错误、内容切换View事务，子类复写
      */
     open fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> = EmptyTransformer()
+
+    override fun onDestroy() {
+        //修复华为手机内存泄漏Bug
+        CleanLeakUtils.fixLeak(this)
+        super.onDestroy()
+    }
 }
