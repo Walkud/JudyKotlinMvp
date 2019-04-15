@@ -318,7 +318,6 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
      * 销毁
      */
     override fun onDestroy() {
-        CleanLeakUtils.fixInputMethodManagerLeak(this)
         super.onDestroy()
         GSYVideoPlayer.releaseAllVideos()
         orientationUtils?.releaseListener()

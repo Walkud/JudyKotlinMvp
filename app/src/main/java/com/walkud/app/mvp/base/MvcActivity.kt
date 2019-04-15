@@ -176,7 +176,7 @@ abstract class MvcActivity : RxAppCompatActivity() {
 
     override fun onDestroy() {
         //修复华为手机内存泄漏Bug
-        CleanLeakUtils.fixLeak(this)
+        CleanLeakUtils.fixInputMethodManagerLeak(this)
         super.onDestroy()
     }
 }
