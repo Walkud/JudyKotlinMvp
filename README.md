@@ -46,6 +46,9 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
 
 <img src="./material/JudyKotlinMvpGif.gif" width="30%">
 
+## Demo 下载地址
+
+![](https://www.pgyer.com/app/qrcode/x2An)
 
 ## 接入的第三方开源库
 
