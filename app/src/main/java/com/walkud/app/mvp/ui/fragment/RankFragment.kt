@@ -63,7 +63,7 @@ class RankFragment : MvpFragment<RankPresenter>() {
         }
 
         //异常布局，点击重新加载
-        multipleStatusView.setOnClickListener {
+        multipleStatusView.setOnRetryClickListener {
             presenter.queryRankList()
         }
     }

@@ -12,21 +12,21 @@ import java.util.ArrayList;
 
 /**
  * 类描述：  一个方便在多种状态切换的view
- *
+ * <p>
  * 创建时间: 2016/1/15 10:20.
  */
 @SuppressWarnings("unused")
-public class MultipleStatusView extends RelativeLayout {
+public class MultipleStatusView extends RelativeLayout implements View.OnClickListener {
     private static final String TAG = "MultipleStatusView";
 
     private static final RelativeLayout.LayoutParams DEFAULT_LAYOUT_PARAMS =
             new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                                            RelativeLayout.LayoutParams.MATCH_PARENT);
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
 
-    public static final int STATUS_CONTENT    = 0x00;
-    public static final int STATUS_LOADING    = 0x01;
-    public static final int STATUS_EMPTY      = 0x02;
-    public static final int STATUS_ERROR      = 0x03;
+    public static final int STATUS_CONTENT = 0x00;
+    public static final int STATUS_LOADING = 0x01;
+    public static final int STATUS_EMPTY = 0x02;
+    public static final int STATUS_ERROR = 0x03;
     public static final int STATUS_NO_NETWORK = 0x04;
 
     private static final int NULL_RESOURCE_ID = -1;
@@ -36,15 +36,15 @@ public class MultipleStatusView extends RelativeLayout {
     private View mLoadingView;
     private View mNoNetworkView;
     private View mContentView;
-    private int  mEmptyViewResId;
-    private int  mErrorViewResId;
-    private int  mLoadingViewResId;
-    private int  mNoNetworkViewResId;
-    private int  mContentViewResId;
+    private int mEmptyViewResId;
+    private int mErrorViewResId;
+    private int mLoadingViewResId;
+    private int mNoNetworkViewResId;
+    private int mContentViewResId;
 
-    private int             mViewStatus;
-    private LayoutInflater  mInflater;
-    private OnClickListener mOnRetryClickListener;
+    private int mViewStatus;
+    private LayoutInflater mInflater;
+    private OnRetryListener onRetryListener;
 
     private final ArrayList<Integer> mOtherIds = new ArrayList<>();
 
@@ -68,19 +68,21 @@ public class MultipleStatusView extends RelativeLayout {
         mInflater = LayoutInflater.from(getContext());
     }
 
-    @Override protected void onFinishInflate() {
+    @Override
+    protected void onFinishInflate() {
         super.onFinishInflate();
         showContent();
     }
 
-    @Override protected void onDetachedFromWindow() {
+    @Override
+    protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         clear(mEmptyView, mLoadingView, mErrorView, mNoNetworkView);
         if (null != mOtherIds) {
             mOtherIds.clear();
         }
-        if (null != mOnRetryClickListener) {
-            mOnRetryClickListener = null;
+        if (null != onRetryListener) {
+            onRetryListener = null;
         }
         mInflater = null;
     }
@@ -92,13 +94,27 @@ public class MultipleStatusView extends RelativeLayout {
         return mViewStatus;
     }
 
+    @Override
+    public void onClick(View v) {
+        //处理重试事件
+        switch (mViewStatus){
+            case STATUS_ERROR://其它错误
+            case STATUS_NO_NETWORK://网络错误
+                if (onRetryListener != null) {
+                    onRetryListener.onClick(mViewStatus);
+                }
+                break;
+        }
+    }
+
     /**
      * 设置重试点击事件
      *
-     * @param onRetryClickListener 重试点击事件
+     * @param onRetryListener 重试点击事件
      */
-    public void setOnRetryClickListener(OnClickListener onRetryClickListener) {
-        this.mOnRetryClickListener = onRetryClickListener;
+    public void setOnRetryClickListener(final OnRetryListener onRetryListener) {
+        this.onRetryListener = onRetryListener;
+        setOnClickListener(this);
     }
 
     /**
@@ -110,7 +126,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示空视图
-     * @param layoutId 自定义布局文件
+     *
+     * @param layoutId     自定义布局文件
      * @param layoutParams 布局参数
      */
     public final void showEmpty(int layoutId, ViewGroup.LayoutParams layoutParams) {
@@ -119,7 +136,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示空视图
-     * @param view 自定义视图
+     *
+     * @param view         自定义视图
      * @param layoutParams 布局参数
      */
     public final void showEmpty(View view, ViewGroup.LayoutParams layoutParams) {
@@ -127,10 +145,6 @@ public class MultipleStatusView extends RelativeLayout {
         mViewStatus = STATUS_EMPTY;
         if (null == mEmptyView) {
             mEmptyView = view;
-            View emptyRetryView = mEmptyView.findViewById(R.id.empty_retry_view);
-            if (null != mOnRetryClickListener && null != emptyRetryView) {
-                emptyRetryView.setOnClickListener(mOnRetryClickListener);
-            }
             mOtherIds.add(mEmptyView.getId());
             addView(mEmptyView, 0, layoutParams);
         }
@@ -146,7 +160,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示错误视图
-     * @param layoutId 自定义布局文件
+     *
+     * @param layoutId     自定义布局文件
      * @param layoutParams 布局参数
      */
     public final void showError(int layoutId, ViewGroup.LayoutParams layoutParams) {
@@ -155,7 +170,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示错误视图
-     * @param view 自定义视图
+     *
+     * @param view         自定义视图
      * @param layoutParams 布局参数
      */
     public final void showError(View view, ViewGroup.LayoutParams layoutParams) {
@@ -163,10 +179,6 @@ public class MultipleStatusView extends RelativeLayout {
         mViewStatus = STATUS_ERROR;
         if (null == mErrorView) {
             mErrorView = view;
-            View errorRetryView = mErrorView.findViewById(R.id.error_retry_view);
-            if (null != mOnRetryClickListener && null != errorRetryView) {
-                errorRetryView.setOnClickListener(mOnRetryClickListener);
-            }
             mOtherIds.add(mErrorView.getId());
             addView(mErrorView, 0, layoutParams);
         }
@@ -182,7 +194,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示加载中视图
-     * @param layoutId 自定义布局文件
+     *
+     * @param layoutId     自定义布局文件
      * @param layoutParams 布局参数
      */
     public final void showLoading(int layoutId, ViewGroup.LayoutParams layoutParams) {
@@ -191,7 +204,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示加载中视图
-     * @param view 自定义视图
+     *
+     * @param view         自定义视图
      * @param layoutParams 布局参数
      */
     public final void showLoading(View view, ViewGroup.LayoutParams layoutParams) {
@@ -214,7 +228,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示无网络视图
-     * @param layoutId 自定义布局文件
+     *
+     * @param layoutId     自定义布局文件
      * @param layoutParams 布局参数
      */
     public final void showNoNetwork(int layoutId, ViewGroup.LayoutParams layoutParams) {
@@ -223,7 +238,8 @@ public class MultipleStatusView extends RelativeLayout {
 
     /**
      * 显示无网络视图
-     * @param view 自定义视图
+     *
+     * @param view         自定义视图
      * @param layoutParams 布局参数
      */
     public final void showNoNetwork(View view, ViewGroup.LayoutParams layoutParams) {
@@ -231,10 +247,6 @@ public class MultipleStatusView extends RelativeLayout {
         mViewStatus = STATUS_NO_NETWORK;
         if (null == mNoNetworkView) {
             mNoNetworkView = view;
-            View noNetworkRetryView = mNoNetworkView.findViewById(R.id.no_network_retry_view);
-            if (null != mOnRetryClickListener && null != noNetworkRetryView) {
-                noNetworkRetryView.setOnClickListener(mOnRetryClickListener);
-            }
             mOtherIds.add(mNoNetworkView.getId());
             addView(mNoNetworkView, 0, layoutParams);
         }
@@ -292,5 +304,16 @@ public class MultipleStatusView extends RelativeLayout {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 重试事件监听
+     */
+    public interface OnRetryListener {
+        /**
+         * 点击事件
+         * @param viewStatus 视图状态
+         */
+        void onClick(int viewStatus);
     }
 }

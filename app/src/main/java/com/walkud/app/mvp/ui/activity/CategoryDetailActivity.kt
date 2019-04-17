@@ -95,7 +95,7 @@ class CategoryDetailActivity : MvpActivity<CategoryDetailPresenter>() {
         }
 
         //异常布局，点击重新加载
-        multipleStatusView.setOnClickListener {
+        multipleStatusView.setOnRetryClickListener {
             presenter.queryCategoryDetailList()
         }
     }

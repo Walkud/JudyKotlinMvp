@@ -60,7 +60,7 @@ class HotFragment : MvpFragment<HotPresenter>() {
     override fun addListener() {
         super.addListener()
         //异常布局，点击重新加载
-        multipleStatusView.setOnClickListener {
+        multipleStatusView.setOnRetryClickListener {
             presenter.queryRankTabData()
         }
     }
@@ -74,6 +74,7 @@ class HotFragment : MvpFragment<HotPresenter>() {
         tabInfoBean.tabInfo.tabList.mapTo(mFragmentList) { RankFragment.getInstance(it.apiUrl) }
 
         mViewPager.adapter = BaseFragmentAdapter(childFragmentManager, mFragmentList, mTabTitleList)
+        mViewPager.offscreenPageLimit = mFragmentList.size
         mTabLayout.setupWithViewPager(mViewPager)
     }
 
