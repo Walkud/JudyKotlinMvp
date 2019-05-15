@@ -21,7 +21,6 @@ import java.util.regex.Pattern
 
 class StatusBarUtil {
 
-
     companion object {
         private var DEFAULT_COLOR = 0
         private var DEFAULT_ALPHA = 0f//Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP ? 0.2f : 0.3f;
@@ -79,69 +78,53 @@ class StatusBarUtil {
                 window.decorView.systemUiVisibility = systemUiVisibility
             }
         }
-        //</editor-fold>
 
         @TargetApi(Build.VERSION_CODES.M)
-//<editor-fold desc="DarkMode">
-        fun darkMode(activity: Activity, dark: Boolean) {
+        fun darkModeFont(activity: Activity,dark:Boolean = true) {
             when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> darkModeForM(activity.window, dark)
                 isFlyme4Later -> darkModeForFlyme4(activity.window, dark)
                 isMIUI6Later -> darkModeForMIUI6(activity.window, dark)
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> darkModeForM(activity.window, dark)
             }
         }
 
         /** 设置状态栏darkMode,字体颜色及icon变黑(目前支持MIUI6以上,Flyme4以上,Android M以上)  */
-        fun darkMode(activity: Activity) {
-            darkMode(activity.window, DEFAULT_COLOR, DEFAULT_ALPHA)
+        fun darkMode(activity: Activity, dark:Boolean = true) {
+            darkMode(activity.window, DEFAULT_COLOR, DEFAULT_ALPHA,dark)
         }
 
-        fun darkMode(activity: Activity, color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float) {
-            darkMode(activity.window, color, alpha)
+        fun darkMode(activity: Activity, color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float, dark:Boolean) {
+            darkMode(activity.window, color, alpha,dark)
         }
 
         /** 设置状态栏darkMode,字体颜色及icon变黑(目前支持MIUI6以上,Flyme4以上,Android M以上)  */
         @TargetApi(Build.VERSION_CODES.M)
-        fun darkMode(window: Window, color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float) {
+        fun darkMode(window: Window, color: Int, @FloatRange(from = 0.0, to = 1.0) alpha: Float, dark:Boolean) {
             when {
+                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
+                    darkModeForM(window, dark)
+                    immersive(window, color, alpha)
+                }
                 isFlyme4Later -> {
-                    darkModeForFlyme4(window, true)
+                    darkModeForFlyme4(window, dark)
                     immersive(window, color, alpha)
                 }
                 isMIUI6Later -> {
-                    darkModeForMIUI6(window, true)
+                    darkModeForMIUI6(window, dark)
                     immersive(window, color, alpha)
                 }
-                Build.VERSION.SDK_INT >= Build.VERSION_CODES.M -> {
-                    darkModeForM(window, true)
-                    immersive(window, color, alpha)
-                }
+
                 Build.VERSION.SDK_INT >= 19 -> {
                     window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
                     setTranslucentView(window.decorView as ViewGroup, color, alpha)
                 }
                 else -> immersive(window, color, alpha)
             }
-            //        if (Build.VERSION.SDK_INT >= 21) {
-            //            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            //            window.setStatusBarColor(Color.TRANSPARENT);
-            //        } else if (Build.VERSION.SDK_INT >= 19) {
-            //            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //        }
-
-            //        setTranslucentView((ViewGroup) window.getDecorView(), color, alpha);
         }
-
-        //------------------------->
 
         /** android 6.0设置字体颜色  */
         @RequiresApi(Build.VERSION_CODES.M)
         fun darkModeForM(window: Window, dark: Boolean) {
-            //        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-            //        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-            //        window.setStatusBarColor(Color.TRANSPARENT);
-
             var systemUiVisibility = window.decorView.systemUiVisibility
             systemUiVisibility = if (dark) {
                 systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -204,8 +187,6 @@ class StatusBarUtil {
             }
 
         }
-        //</editor-fold>
-
 
         /** 增加View的paddingTop,增加的值为状态栏高度  */
         fun setPadding(context: Context, view: View) {

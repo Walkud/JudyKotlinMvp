@@ -14,6 +14,7 @@ import com.walkud.app.mvp.ui.fragment.DiscoveryFragment
 import com.walkud.app.mvp.ui.fragment.HomeFragment
 import com.walkud.app.mvp.ui.fragment.HotFragment
 import com.walkud.app.mvp.ui.fragment.MineFragment
+import com.walkud.app.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -46,6 +47,7 @@ class MainActivity : MvpActivity<MainPresenter>() {
 
 
     override fun initView(savedInstanceState: Bundle?) {
+        StatusBarUtil.darkModeFont(this,true)
         if (savedInstanceState != null) {
             mIndex = savedInstanceState.getInt("currTabIndex")
         }

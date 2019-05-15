@@ -21,7 +21,6 @@ class AboutActivity : MvcActivity() {
      * 初始化View
      */
     override fun initView(savedInstanceState: Bundle?) {
-
         StatusBarUtil.darkMode(this)
         StatusBarUtil.setPaddingSmart(this, toolbar)
 

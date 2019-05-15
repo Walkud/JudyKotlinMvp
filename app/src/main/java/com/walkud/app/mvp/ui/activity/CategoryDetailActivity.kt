@@ -60,7 +60,7 @@ class CategoryDetailActivity : MvpActivity<CategoryDetailPresenter>() {
         })
 
         //状态栏透明和间距处理
-        StatusBarUtil.darkMode(this)
+        StatusBarUtil.darkMode(this,false)
         StatusBarUtil.setPaddingSmart(this, toolbar)
 
         presenter.init()
