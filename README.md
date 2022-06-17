@@ -6,6 +6,8 @@
 
 本项目是参考 [git-xuhao/KotlinMvp](https://github.com/git-xuhao/KotlinMvp) ，对原项目 Mvp 代码及 Adapter 代码按照自己的想法进行了重构，布局 (xml) 文件(除 fragment_mine.xml )、工具类、自定义 View 都直接使用的原项目的文件，本项目的主要目的是为了 Kotlin 学习，将自己对 Java 版 Mvp 的理解用 Kotlin 实现。
 
+2019 年使用 Flutter 实现,有兴趣的可以了解下。([传送门](https://github.com/Walkud/JudyFlutter))
+
 ## 说明
 
 Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡到 Kotlin ；才开始使用的时候感觉很多地方都想吐槽(比如泛型、反射)，但把整个项目重构完成后，对 Kotlin 有了个全新的认识，转变了一些看法。
@@ -50,7 +52,7 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
 
 ## Demo 下载地址
 
-![](https://www.pgyer.com/app/qrcode/x2An)
+![](https://www.pgyer.com/app/qrcode/Gz7E)
 
 ## 接入的第三方开源库
 
