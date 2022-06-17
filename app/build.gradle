@@ -73,7 +73,7 @@ dependencies {
     // Support库
     implementation rootProject.ext.supportLibs
     // 网络请求库
-    implementation rootProject.ext.lemon
+    implementation rootProject.ext.lemonCore
     implementation rootProject.ext.lemonLog
 //    implementation rootProject.ext.lemonSpace//由于该项目未使用androidx，所以不能引用该库
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"

@@ -28,9 +28,9 @@ ext {
             annotations: "com.android.support:support-annotations:$dependVersion.androidSupportSdkVersion"
     ]
 
-    lemon = "com.github.Walkud.Lemon:lemon:${dependVersion.lemonSdkVersion}"
-    lemonLog = "com.github.Walkud.Lemon:lemonLog:${dependVersion.lemonSdkVersion}"
-    lemonSpace = "com.github.Walkud.Lemon:lemonSpace:${dependVersion.lemonSdkVersion}"
+    lemonCore = "com.github.Walkud.Lemon:core:${dependVersion.lemonSdkVersion}"
+    lemonLog = "com.github.Walkud.Lemon:log:${dependVersion.lemonSdkVersion}"
+    lemonSpace = "com.github.Walkud.Lemon:space:${dependVersion.lemonSdkVersion}"
 
     glide = "com.github.bumptech.glide:glide:${dependVersion.glideSdkVersion}"
     glideCompiler = "com.github.bumptech.glide:compiler:${dependVersion.glideSdkVersion}"
