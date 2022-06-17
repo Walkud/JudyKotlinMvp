@@ -16,7 +16,7 @@ ext {
             rxJava                  : "2.1.17",
             rxAndroid               : "2.0.2",
             rxLifecycle             : "2.2.2",
-            lemonSdkVersion         : "0.1.1"
+            lemonSdkVersion         : "0.1.2"
     ]
 
     supportDeps = [
@@ -30,6 +30,7 @@ ext {
 
     lemon = "com.github.Walkud.Lemon:lemon:${dependVersion.lemonSdkVersion}"
     lemonLog = "com.github.Walkud.Lemon:lemonLog:${dependVersion.lemonSdkVersion}"
+    lemonSpace = "com.github.Walkud.Lemon:lemonSpace:${dependVersion.lemonSdkVersion}"
 
     glide = "com.github.bumptech.glide:glide:${dependVersion.glideSdkVersion}"
     glideCompiler = "com.github.bumptech.glide:compiler:${dependVersion.glideSdkVersion}"
