@@ -6,8 +6,7 @@ import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.ui.activity.VideoDetailActivity
-import com.walkud.app.rx.RxSubscribe
-import com.walkud.app.rx.transformer.NetTransformer
+import com.walkud.app.net.space.bindUi
 import com.walkud.app.utils.DisplayManager
 import com.walkud.app.utils.NetworkUtil
 
@@ -82,7 +81,9 @@ class VideoDetailPresenter : BasePresenter<VideoDetailActivity, MainModel>() {
         }
 
         //设置背景
-        val backgroundUrl = itemData.data.cover.blurred + "/thumbnail/${DisplayManager.getScreenHeight()!! - DisplayManager.dip2px(250f)!!}x${DisplayManager.getScreenWidth()}"
+        val backgroundUrl = itemData.data.cover.blurred + "/thumbnail/${
+            DisplayManager.getScreenHeight()!! - DisplayManager.dip2px(250f)!!
+        }x${DisplayManager.getScreenWidth()}"
         view.updateBackgroundUi(backgroundUrl)
 
         //加载相关数据
@@ -95,17 +96,12 @@ class VideoDetailPresenter : BasePresenter<VideoDetailActivity, MainModel>() {
     private fun loadRelatedVideo() {
         val id = itemData.data?.id ?: 0
         model.getRelatedData(id)
-                .compose(NetTransformer())
-                .compose(view.getSmartRefreshTransformer())
-                .compose(bindUntilOnDestroyEvent())
-                .subscribe(object : RxSubscribe<HomeBean.Issue>() {
-                    override fun call(result: HomeBean.Issue) {
-                        //添加当前视频相关数据
-                        result.itemList.add(0, itemData)
-                        view.updateRecentRelatedVideo(result.itemList)
-                    }
-                })
-
+            .bindUi(view.getSmartRefreshProgressView(), view)
+            .request {
+                //添加当前视频相关数据
+                it.itemList.add(0, itemData)
+                view.updateRecentRelatedVideo(it.itemList)
+            }
     }
 
 }

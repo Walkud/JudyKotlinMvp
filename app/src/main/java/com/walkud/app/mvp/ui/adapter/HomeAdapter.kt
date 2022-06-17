@@ -3,9 +3,9 @@ package com.walkud.app.mvp.ui.adapter
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.hazz.kotlinmvp.glide.GlideApp
 import com.walkud.app.R
 import com.walkud.app.common.extensions.durationFormat
+import com.walkud.app.common.glide.GlideApp
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.model.bean.HomeBean.Issue.Item.Companion.ITEM_TYPE_CONTENT
 import com.walkud.app.mvp.model.bean.HomeBean.Issue.Item.Companion.ITEM_TYPE_TEXT_HEADER

@@ -48,7 +48,7 @@ object DisplayManager {
      * @param size
      * @return
      */
-    fun getPaintSize(size: Int): Int? {
+    fun getPaintSize(size: Int): Int {
         return getRealHeight(size)
     }
 
@@ -58,7 +58,7 @@ object DisplayManager {
      * @param px ui图中的大小
      * @return
      */
-    fun getRealWidth(px: Int): Int? {
+    fun getRealWidth(px: Int): Int {
         //ui图的宽度
         return getRealWidth(px, STANDARD_WIDTH.toFloat())
     }
@@ -70,7 +70,7 @@ object DisplayManager {
      * @param parentWidth 父view在ui图中的高度
      * @return
      */
-    fun getRealWidth(px: Int, parentWidth: Float): Int? {
+    fun getRealWidth(px: Int, parentWidth: Float): Int {
         return (px / parentWidth * getScreenWidth()!!).toInt()
     }
 
@@ -80,7 +80,7 @@ object DisplayManager {
      * @param px ui图中的大小
      * @return
      */
-    fun getRealHeight(px: Int): Int? {
+    fun getRealHeight(px: Int): Int {
         //ui图的宽度
         return getRealHeight(px, STANDARD_HEIGHT.toFloat())
     }
@@ -92,7 +92,7 @@ object DisplayManager {
      * @param parentHeight 父view在ui图中的高度
      * @return
      */
-    fun getRealHeight(px: Int, parentHeight: Float): Int? {
+    fun getRealHeight(px: Int, parentHeight: Float): Int {
         return (px / parentHeight * getScreenHeight()!!).toInt()
     }
 
@@ -101,7 +101,7 @@ object DisplayManager {
      * @param dipValue
      * @return int
      */
-    fun dip2px(dipValue: Float): Int? {
+    fun dip2px(dipValue: Float): Int {
         val scale = displayMetrics?.density
         return (dipValue * scale!! + 0.5f).toInt()
     }

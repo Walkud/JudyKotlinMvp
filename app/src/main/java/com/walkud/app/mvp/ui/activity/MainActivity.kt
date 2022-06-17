@@ -14,7 +14,6 @@ import com.walkud.app.mvp.ui.fragment.DiscoveryFragment
 import com.walkud.app.mvp.ui.fragment.HomeFragment
 import com.walkud.app.mvp.ui.fragment.HotFragment
 import com.walkud.app.mvp.ui.fragment.MineFragment
-import com.walkud.app.utils.StatusBarUtil
 import kotlinx.android.synthetic.main.activity_main.*
 
 /**
@@ -26,9 +25,20 @@ class MainActivity : MvpActivity<MainPresenter>() {
     private val mTitles = arrayOf("每日精选", "发现", "热门", "我的")
 
     // 未被选中的图标
-    private val mIconUnSelectIds = intArrayOf(R.mipmap.ic_home_normal, R.mipmap.ic_discovery_normal, R.mipmap.ic_hot_normal, R.mipmap.ic_mine_normal)
+    private val mIconUnSelectIds = intArrayOf(
+        R.mipmap.ic_home_normal,
+        R.mipmap.ic_discovery_normal,
+        R.mipmap.ic_hot_normal,
+        R.mipmap.ic_mine_normal
+    )
+
     // 被选中的图标
-    private val mIconSelectIds = intArrayOf(R.mipmap.ic_home_selected, R.mipmap.ic_discovery_selected, R.mipmap.ic_hot_selected, R.mipmap.ic_mine_selected)
+    private val mIconSelectIds = intArrayOf(
+        R.mipmap.ic_home_selected,
+        R.mipmap.ic_discovery_selected,
+        R.mipmap.ic_hot_selected,
+        R.mipmap.ic_mine_selected
+    )
 
     private val mTabEntities = ArrayList<CustomTabEntity>()
 
@@ -36,8 +46,10 @@ class MainActivity : MvpActivity<MainPresenter>() {
     private var mDiscoveryFragment: DiscoveryFragment? = null
     private var mHotFragment: HotFragment? = null
     private var mMineFragment: MineFragment? = null
+
     //
     private var mExitTime: Long = 0
+
     //默认为0
     private var mIndex = 0
 
@@ -47,7 +59,6 @@ class MainActivity : MvpActivity<MainPresenter>() {
 
 
     override fun initView(savedInstanceState: Bundle?) {
-        StatusBarUtil.darkModeFont(this,true)
         if (savedInstanceState != null) {
             mIndex = savedInstanceState.getInt("currTabIndex")
         }
@@ -65,8 +76,14 @@ class MainActivity : MvpActivity<MainPresenter>() {
      * 初始化底部菜单
      */
     private fun initTab() {
-        (0 until mTitles.size)
-                .mapTo(mTabEntities) { TabEntity(mTitles[it], mIconSelectIds[it], mIconUnSelectIds[it]) }
+        (mTitles.indices)
+            .mapTo(mTabEntities) {
+                TabEntity(
+                    mTitles[it],
+                    mIconSelectIds[it],
+                    mIconUnSelectIds[it]
+                )
+            }
         //为Tab赋值
         tab_layout.setTabData(mTabEntities)
         tab_layout.setOnTabSelectListener(object : OnTabSelectListener {

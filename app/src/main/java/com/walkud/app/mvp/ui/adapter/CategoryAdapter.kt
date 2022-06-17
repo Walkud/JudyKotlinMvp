@@ -5,8 +5,8 @@ import android.widget.TextView
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.hazz.kotlinmvp.glide.GlideApp
 import com.walkud.app.R
+import com.walkud.app.common.glide.GlideApp
 import com.walkud.app.mvp.model.bean.CategoryBean
 import com.walkud.app.utils.ContextUtil
 

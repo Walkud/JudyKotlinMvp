@@ -3,21 +3,21 @@ package com.walkud.app.mvp.base
 import android.content.Intent
 import android.os.Bundle
 import android.support.annotation.LayoutRes
+import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import com.orhanobut.logger.Logger
-import com.trello.rxlifecycle2.components.support.RxFragment
-import com.walkud.app.rx.transformer.EmptyTransformer
-import com.walkud.app.rx.transformer.ProgressTransformer
-import io.reactivex.ObservableTransformer
+import com.walkud.app.common.exception.ExceptionHandle
+import com.walkud.app.view.ProgressView
+import java.lang.Exception
 
 /**
  * Mvc Fragment 基类
  * Created by Zhuliya on 2018/11/8
  */
-abstract class MvcFragment : RxFragment() {
+abstract class MvcFragment : Fragment() {
 
     protected var mContentView: View? = null
     private var mIsLoadedData = false
@@ -25,10 +25,14 @@ abstract class MvcFragment : RxFragment() {
     /**
      * 创建View
      */
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         // 避免多次从xml中加载布局文件
         if (mContentView == null) {
-            mContentView = LayoutInflater.from(activity!!).inflate(getLayoutId(), null)
+            mContentView = LayoutInflater.from(activity).inflate(getLayoutId(), null)
         } else {
             mContentView!!.parent?.let {
                 (it as ViewGroup).removeView(mContentView)
@@ -191,6 +195,13 @@ abstract class MvcFragment : RxFragment() {
     }
 
     /**
+     * 显示异常信息Toast
+     */
+    fun showExceptionToast(exception: Exception) {
+        showToast(ExceptionHandle.handleExceptionMsg(exception))
+    }
+
+    /**
      * 跳转
      * @param cls 类
      */
@@ -210,24 +221,24 @@ abstract class MvcFragment : RxFragment() {
      * 获取异步进度加载事务，子类复写
      * 默认返回 空事务或者默认进度框事务
      */
-    open fun <VT> getProgressTransformer(): ObservableTransformer<VT, VT> {
+    open fun getWaitProgressView(): ProgressView {
         if (activity == null) {
             //防止空指针
-            return EmptyTransformer()
+            return ProgressView.EMPTY
         }
-        return ProgressTransformer(activity!!)
+        return ProgressView.WaitDialgProgress(activity!!, "")
     }
 
     /**
      * 获取异步进度下拉或上拉加载事务，子类复写
      * 默认返回 空事务
      */
-    open fun <VT> getSmartRefreshTransformer(): ObservableTransformer<VT, VT> = EmptyTransformer()
+    open fun getSmartRefreshProgressView(): ProgressView = ProgressView.EMPTY
 
     /**
      * 获取进度、错误、内容切换View事务，子类复写
      */
-    open fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> = EmptyTransformer()
+    open fun getMultipleStatusProgressView(): ProgressView = ProgressView.EMPTY
 
 
 }

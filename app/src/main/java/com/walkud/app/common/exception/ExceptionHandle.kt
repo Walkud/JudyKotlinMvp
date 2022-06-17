@@ -31,7 +31,6 @@ class ExceptionHandle {
                 is ParseException -> "数据解析异常"
                 is ApiException -> e.message.toString()
                 is IllegalArgumentException -> "参数错误"
-                is SubscribeException -> "跑偏了，稍后请重试!"
                 else -> "未知错误，可能抛锚了吧~"
             }
 
@@ -52,7 +51,6 @@ class ExceptionHandle {
             is ApiException,
             is IllegalArgumentException,
             is ParseException -> ErrorStatus.SERVER_ERROR //服务器内部错误
-            is SubscribeException -> ErrorStatus.LCOAL_LOGIC_ERROR //订阅逻辑本地错误
             else -> ErrorStatus.UNKNOWN_ERROR //未知错误
         }
 

@@ -1,4 +1,4 @@
-package com.hazz.kotlinmvp.glide
+package com.walkud.app.common.glide
 
 import android.content.Context
 
@@ -52,6 +52,8 @@ class CustomAppGlideModule : AppGlideModule() {
      * @param registry
      */
     override fun registerComponents(context: Context, glide: Glide, registry: Registry) {
-        registry.append(String::class.java, InputStream::class.java, CustomBaseGlideUrlLoader.Factory())
+        registry.append(String::class.java, InputStream::class.java,
+            CustomBaseGlideUrlLoader.Factory()
+        )
     }
 }

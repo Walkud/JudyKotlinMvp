@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.hazz.kotlinmvp.glide
+package com.walkud.app.common.glide
 
 import android.content.res.Resources
 import android.graphics.*

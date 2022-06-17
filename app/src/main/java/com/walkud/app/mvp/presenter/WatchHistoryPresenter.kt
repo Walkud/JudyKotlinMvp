@@ -2,11 +2,8 @@ package com.walkud.app.mvp.presenter
 
 import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
-import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.ui.activity.WatchHistoryActivity
-import com.walkud.app.rx.RxSubscribe
-import com.walkud.app.rx.transformer.NetTransformer
-import java.util.*
+import com.walkud.app.net.space.bindUi
 
 /**
  * 观看记录 Presneter
@@ -19,14 +16,8 @@ class WatchHistoryPresenter : BasePresenter<WatchHistoryActivity, MainModel>() {
      */
     fun queryWatchHistory() {
         model.getWatchHistory()
-                .compose(NetTransformer())
-                .compose(view.getMultipleStatusViewTransformer())
-                .compose(bindUntilOnDestroyEvent())
-                .subscribe(object : RxSubscribe<ArrayList<HomeBean.Issue.Item>>() {
-                    override fun call(result: ArrayList<HomeBean.Issue.Item>) {
-                        view.updateListUi(result)
-                    }
-                })
+            .bindUi(view.getMultipleStatusProgressView(), view)
+            .request { view.updateListUi(it) }
     }
 
 }

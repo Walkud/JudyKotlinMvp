@@ -5,9 +5,10 @@ import android.widget.ImageView
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseMultiItemQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.hazz.kotlinmvp.glide.GlideApp
 import com.walkud.app.R
 import com.walkud.app.common.extensions.durationFormat
+import com.walkud.app.common.glide.GlideApp
+import com.walkud.app.common.glide.GlideRoundTransform
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.utils.ContextUtil
 
@@ -60,7 +61,7 @@ class VideoDetailAdapter(data: MutableList<HomeBean.Issue.Item> = ArrayList()) :
             val iv: ImageView = helper.getView(R.id.iv_avatar)
             GlideApp.with(mContext)
                     .load(data.data.cover.detail)
-                    .optionalTransform(com.hazz.kotlinmvp.glide.GlideRoundTransform())
+                    .optionalTransform(GlideRoundTransform())
                     .placeholder(R.drawable.placeholder_banner)
                     .into(iv)
 
@@ -94,7 +95,7 @@ class VideoDetailAdapter(data: MutableList<HomeBean.Issue.Item> = ArrayList()) :
         val iv: ImageView = helper.getView(R.id.iv_video_small_card)
         GlideApp.with(mContext)
                 .load(item.data.cover.detail)
-                .optionalTransform(com.hazz.kotlinmvp.glide.GlideRoundTransform())
+                .optionalTransform(GlideRoundTransform())
                 .placeholder(R.drawable.placeholder_banner)
                 .into(iv)
     }

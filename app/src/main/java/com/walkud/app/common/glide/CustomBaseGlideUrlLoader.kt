@@ -1,4 +1,4 @@
-package com.hazz.kotlinmvp.glide
+package com.walkud.app.common.glide
 
 import com.bumptech.glide.load.Options
 import com.bumptech.glide.load.model.*

@@ -9,9 +9,6 @@ import com.walkud.app.R
 import com.walkud.app.mvp.base.MvcActivity
 import com.walkud.app.utils.AppUtils
 import com.walkud.app.utils.ContextUtil
-import com.zhy.m.permission.MPermissions
-import com.zhy.m.permission.PermissionDenied
-import com.zhy.m.permission.PermissionGrant
 import kotlinx.android.synthetic.main.activity_splash.*
 
 /**
@@ -28,8 +25,12 @@ class SplashActivity : MvcActivity() {
     private var alphaAnimation: AlphaAnimation? = null
 
     init {
-        textTypeface = Typeface.createFromAsset(ContextUtil.getContext().assets, "fonts/Lobster-1.4.otf")
-        descTypeFace = Typeface.createFromAsset(ContextUtil.getContext().assets, "fonts/FZLanTingHeiS-L-GB-Regular.TTF")
+        textTypeface =
+            Typeface.createFromAsset(ContextUtil.getContext().assets, "fonts/Lobster-1.4.otf")
+        descTypeFace = Typeface.createFromAsset(
+            ContextUtil.getContext().assets,
+            "fonts/FZLanTingHeiS-L-GB-Regular.TTF"
+        )
     }
 
     override fun getLayoutId() = R.layout.activity_splash
@@ -59,22 +60,14 @@ class SplashActivity : MvcActivity() {
         recheckPermissions()
     }
 
-    /**
-     * 权限获取成功
-     */
-    @PermissionGrant(PERMISSION_CODE)
-    fun requestWriteExternalStorageForUploadSuccess() {
-        alphaAnimation?.let {
-            iv_web_icon.startAnimation(it)
-        }
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+        super.onPermissionsGranted(requestCode, perms)
+        iv_web_icon.startAnimation(alphaAnimation)
     }
 
-    /**
-     * 权限获取失败
-     */
-    @PermissionDenied(PERMISSION_CODE)
-    fun requestWriteExternalStorageForUploadFailed() {
-        showPermissionDialog(resources.getString(R.string.p_read_external_storage))
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+        super.onPermissionsDenied(requestCode, perms)
+        showPermissionDialog(getString(R.string.p_read_external_storage))
     }
 
     /**
@@ -82,13 +75,9 @@ class SplashActivity : MvcActivity() {
      */
     override fun recheckPermissions() {
         super.recheckPermissions()
-        MPermissions.requestPermissions(this, PERMISSION_CODE,
-                Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        alphaAnimation?.cancel()
-        alphaAnimation = null
+        requestPermissions(
+            PERMISSION_CODE, getString(R.string.p_read_external_storage),
+            Manifest.permission.READ_PHONE_STATE, Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
     }
 }

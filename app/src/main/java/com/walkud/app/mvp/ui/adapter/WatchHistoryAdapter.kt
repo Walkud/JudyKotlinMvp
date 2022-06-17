@@ -4,9 +4,9 @@ import android.support.v4.content.ContextCompat
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.BaseViewHolder
-import com.hazz.kotlinmvp.glide.GlideApp
 import com.walkud.app.R
 import com.walkud.app.common.extensions.durationFormat
+import com.walkud.app.common.glide.GlideApp
 import com.walkud.app.mvp.model.bean.HomeBean
 
 /**

@@ -17,23 +17,21 @@ import android.widget.ImageView
 import com.bumptech.glide.load.DecodeFormat
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.hazz.kotlinmvp.glide.GlideApp
 import com.orhanobut.logger.Logger
 import com.shuyu.gsyvideoplayer.utils.OrientationUtils
 import com.shuyu.gsyvideoplayer.video.StandardGSYVideoPlayer
 import com.shuyu.gsyvideoplayer.video.base.GSYVideoPlayer
 import com.walkud.app.R
 import com.walkud.app.common.ExtraKey
+import com.walkud.app.common.glide.GlideApp
 import com.walkud.app.mvp.base.MvpActivity
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.presenter.VideoDetailPresenter
 import com.walkud.app.mvp.ui.adapter.VideoDetailAdapter
-import com.walkud.app.rx.transformer.SmartRefreshTransformer
 import com.walkud.app.utils.CleanLeakUtils
-import com.walkud.app.utils.MLog
 import com.walkud.app.utils.StatusBarUtil
+import com.walkud.app.view.ProgressView
 import com.walkud.app.view.VideoListener
-import io.reactivex.ObservableTransformer
 import kotlinx.android.synthetic.main.activity_video_detail.*
 import java.util.*
 
@@ -65,7 +63,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
             val intent = Intent(activity, VideoDetailActivity::class.java)
             intent.putExtra(ExtraKey.VIDEO_DATA, itemData)
             intent.putExtra(ExtraKey.TRANSITION, true)
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 val pair = Pair(view, ExtraKey.IMG_TRANSITION)
                 val activityOptions = ActivityOptionsCompat.makeSceneTransitionAnimation(
                         activity, pair)
@@ -101,7 +99,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
         presenter.init()
     }
 
-    override fun <VT> getSmartRefreshTransformer(): ObservableTransformer<VT, VT> = SmartRefreshTransformer(mRefreshLayout)
+    override fun getSmartRefreshProgressView()=ProgressView.SmartRefreshProgress(mRefreshLayout)
 
     /**
      * 添加事件
@@ -140,7 +138,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
 
             override fun onAutoComplete(url: String, vararg objects: Any) {
                 super.onAutoComplete(url, *objects)
-                MLog.d("***** onAutoPlayComplete **** ")
+                Logger.d("***** onAutoPlayComplete **** ")
             }
 
             override fun onPlayError(url: String, vararg objects: Any) {
@@ -150,12 +148,12 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
 
             override fun onEnterFullscreen(url: String, vararg objects: Any) {
                 super.onEnterFullscreen(url, *objects)
-                MLog.d("***** onEnterFullscreen **** ")
+                Logger.d("***** onEnterFullscreen **** ")
             }
 
             override fun onQuitFullscreen(url: String, vararg objects: Any) {
                 super.onQuitFullscreen(url, *objects)
-                MLog.d("***** onQuitFullscreen **** ")
+                Logger.d("***** onQuitFullscreen **** ")
                 //列表返回的样式判断
                 orientationUtils?.backToProtVideo()
             }
@@ -229,7 +227,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
             }
 
             override fun onTransitionEnd(p0: Transition?) {
-                MLog.d("onTransitionEnd()------")
+                Logger.d("onTransitionEnd()------")
 
                 presenter.refreshVideoInfo()
                 transition?.removeListener(this)
@@ -243,7 +241,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
      * 设置播放视频 URL
      */
     fun setVideo(url: String) {
-        MLog.d("playUrl:$url")
+        Logger.d("playUrl:$url")
         mVideoView.setUp(url, false, "")
         //开始自动播放
         mVideoView.startPlayLogic()
@@ -318,6 +316,7 @@ class VideoDetailActivity : MvpActivity<VideoDetailPresenter>() {
      * 销毁
      */
     override fun onDestroy() {
+        CleanLeakUtils.fixInputMethodManagerLeak(this)
         super.onDestroy()
         GSYVideoPlayer.releaseAllVideos()
         orientationUtils?.releaseListener()

@@ -34,18 +34,19 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:background="@color/color_title_bg"
-        app:tabMinWidth="100dp"
         app:tabIndicatorColor="#000"
+        app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="2dp"
+        app:tabMinWidth="100dp"
         app:tabSelectedTextColor="#000"
         app:tabTextColor="#5000" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/division_line"
-        android:background="@color/color_light_black"/>
+        android:background="@color/color_light_black" />
 
-    <com.classic.common.MultipleStatusView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
+    <com.classic.common.MultipleStatusView
         android:id="@+id/multipleStatusView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -54,10 +55,11 @@
         app:errorView="@layout/layout_error_view"
         app:loadingView="@layout/layout_loading_view"
         app:noNetworkView="@layout/layout_network_view">
-    <android.support.v4.view.ViewPager
-        android:id="@+id/mViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/mViewPager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </com.classic.common.MultipleStatusView>
 
 </LinearLayout>

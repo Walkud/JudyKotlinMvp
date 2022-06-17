@@ -11,9 +11,11 @@ import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.presenter.FollowPresenter
 import com.walkud.app.mvp.ui.activity.VideoDetailActivity
 import com.walkud.app.mvp.ui.adapter.FollowAdapter
-import com.walkud.app.rx.transformer.MultipleStatusViewTransformer
-import io.reactivex.ObservableTransformer
+import com.walkud.app.view.ProgressView
 import kotlinx.android.synthetic.main.layout_recyclerview.*
+import kotlinx.android.synthetic.main.layout_recyclerview.mRecyclerView
+import kotlinx.android.synthetic.main.layout_recyclerview.multipleStatusView
+import kotlinx.android.synthetic.main.layout_watch_history.*
 
 /**
  * 发现-关注 UI
@@ -36,22 +38,22 @@ class FollowFragment : MvpFragment<FollowPresenter>() {
     /**
      * 获取加载进度切换事务
      */
-    override fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> {
-        return MultipleStatusViewTransformer(multipleStatusView)
-    }
+    override fun getMultipleStatusProgressView() =
+        ProgressView.MultipleStatusProgress(multipleStatusView)
 
     /**
      * 初始化View
      */
     override fun initView(savedInstanceState: Bundle?, rootView: View) {
-        mRecyclerView.layoutManager = LinearLayoutManager(activity)
+        val layoutManager = LinearLayoutManager(activity)
+        mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = followAdapter
         //实现自动加载
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                val itemCount = mRecyclerView.layoutManager.itemCount
-                val lastVisibleItem = (mRecyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                val itemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 if (!loadingMore && lastVisibleItem == (itemCount - 1)) {
                     loadingMore = true
                     presenter.queryFollowList()
@@ -65,13 +67,14 @@ class FollowFragment : MvpFragment<FollowPresenter>() {
      */
     override fun addListener() {
         super.addListener()
-        followAdapter.onItemClick = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            val itemData = adapter.getItem(position) as HomeBean.Issue.Item
-            VideoDetailActivity.startActivity(activity!!, view, itemData)
-        }
+        followAdapter.onItemClick =
+            BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+                val itemData = adapter.getItem(position) as HomeBean.Issue.Item
+                VideoDetailActivity.startActivity(activity!!, view, itemData)
+            }
 
         //异常布局，点击重新加载
-        multipleStatusView.setOnRetryClickListener {
+        multipleStatusView.setOnClickListener {
             presenter.queryFollowList()
         }
     }

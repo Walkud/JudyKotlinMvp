@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.chad.library.adapter.base.BaseQuickAdapter
-import com.hazz.kotlinmvp.glide.GlideApp
 import com.walkud.app.R
+import com.walkud.app.common.glide.GlideApp
 import com.walkud.app.mvp.base.MvpActivity
 import com.walkud.app.mvp.model.bean.CategoryBean
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.presenter.CategoryDetailPresenter
 import com.walkud.app.mvp.ui.adapter.CategoryDetailAdapter
-import com.walkud.app.rx.transformer.MultipleStatusViewTransformer
 import com.walkud.app.utils.StatusBarUtil
-import io.reactivex.ObservableTransformer
+import com.walkud.app.view.ProgressView
 import kotlinx.android.synthetic.main.activity_category_detail.*
 
 /**
@@ -33,9 +32,8 @@ class CategoryDetailActivity : MvpActivity<CategoryDetailPresenter>() {
     /**
      * 获取加载进度切换事务
      */
-    override fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> {
-        return MultipleStatusViewTransformer(multipleStatusView)
-    }
+    override fun getMultipleStatusProgressView() =
+        ProgressView.MultipleStatusProgress(multipleStatusView)
 
     /**
      * 初始化View
@@ -44,14 +42,16 @@ class CategoryDetailActivity : MvpActivity<CategoryDetailPresenter>() {
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        mRecyclerView.layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
+        mRecyclerView.layoutManager = layoutManager
         mRecyclerView.adapter = categoryDetailAdapter
         //实现自动加载
         mRecyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                val itemCount = mRecyclerView.layoutManager.itemCount
-                val lastVisibleItem = (mRecyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                val itemCount = layoutManager.itemCount
+                val lastVisibleItem =
+                    (mRecyclerView.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
                 if (!loadingMore && lastVisibleItem == (itemCount - 1)) {
                     loadingMore = true
                     presenter.queryMoreCategoryData()
@@ -60,7 +60,7 @@ class CategoryDetailActivity : MvpActivity<CategoryDetailPresenter>() {
         })
 
         //状态栏透明和间距处理
-        StatusBarUtil.darkMode(this,false)
+        StatusBarUtil.darkMode(this)
         StatusBarUtil.setPaddingSmart(this, toolbar)
 
         presenter.init()
@@ -72,9 +72,9 @@ class CategoryDetailActivity : MvpActivity<CategoryDetailPresenter>() {
     fun updateTopUi(categoryData: CategoryBean) {
         // 加载headerImage
         GlideApp.with(this)
-                .load(categoryData.headerImage)
-                .placeholder(R.color.color_darker_gray)
-                .into(imageView)
+            .load(categoryData.headerImage)
+            .placeholder(R.color.color_darker_gray)
+            .into(imageView)
 
         tv_category_desc.text = "#${categoryData.description}#"
 
@@ -89,13 +89,14 @@ class CategoryDetailActivity : MvpActivity<CategoryDetailPresenter>() {
     override fun addListener() {
         super.addListener()
         toolbar.setNavigationOnClickListener { backward() }
-        categoryDetailAdapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            val item = adapter.getItem(position) as HomeBean.Issue.Item
-            VideoDetailActivity.startActivity(this@CategoryDetailActivity, view, item)
-        }
+        categoryDetailAdapter.onItemClickListener =
+            BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+                val item = adapter.getItem(position) as HomeBean.Issue.Item
+                VideoDetailActivity.startActivity(this@CategoryDetailActivity, view, item)
+            }
 
         //异常布局，点击重新加载
-        multipleStatusView.setOnRetryClickListener {
+        multipleStatusView.setOnClickListener {
             presenter.queryCategoryDetailList()
         }
     }

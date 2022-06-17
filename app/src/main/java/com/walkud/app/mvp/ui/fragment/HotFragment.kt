@@ -9,10 +9,14 @@ import com.walkud.app.mvp.base.BaseFragmentAdapter
 import com.walkud.app.mvp.base.MvpFragment
 import com.walkud.app.mvp.model.bean.TabInfoBean
 import com.walkud.app.mvp.presenter.HotPresenter
-import com.walkud.app.rx.transformer.MultipleStatusViewTransformer
+import com.walkud.app.utils.DisplayManager
 import com.walkud.app.utils.StatusBarUtil
-import io.reactivex.ObservableTransformer
+import com.walkud.app.view.ProgressView
 import kotlinx.android.synthetic.main.fragment_hot.*
+import kotlinx.android.synthetic.main.fragment_hot.multipleStatusView
+import kotlinx.android.synthetic.main.fragment_hot.toolbar
+import kotlinx.android.synthetic.main.fragment_hot.tv_header_title
+import kotlinx.android.synthetic.main.layout_watch_history.*
 
 /**
  * 热门 UI
@@ -36,9 +40,8 @@ class HotFragment : MvpFragment<HotPresenter>() {
     /**
      * 获取加载进度切换事务
      */
-    override fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> {
-        return MultipleStatusViewTransformer(multipleStatusView)
-    }
+    override fun getMultipleStatusProgressView() =
+        ProgressView.MultipleStatusProgress(multipleStatusView)
 
     /**
      * 初始化View
@@ -60,7 +63,7 @@ class HotFragment : MvpFragment<HotPresenter>() {
     override fun addListener() {
         super.addListener()
         //异常布局，点击重新加载
-        multipleStatusView.setOnRetryClickListener {
+        multipleStatusView.setOnClickListener {
             presenter.queryRankTabData()
         }
     }

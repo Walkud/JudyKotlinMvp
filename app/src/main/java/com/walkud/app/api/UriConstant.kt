@@ -1,4 +1,4 @@
-package com.hazz.kotlinmvp.api
+package com.walkud.app.api
 
 /**
  * Created by xuhao on 2017/11/16.

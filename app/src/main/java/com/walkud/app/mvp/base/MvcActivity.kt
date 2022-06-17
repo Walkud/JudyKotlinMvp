@@ -6,21 +6,20 @@ import android.os.Bundle
 import android.provider.Settings
 import android.support.annotation.LayoutRes
 import android.support.v7.app.AlertDialog
+import android.support.v7.app.AppCompatActivity
 import android.widget.Toast
-import com.trello.rxlifecycle2.components.support.RxAppCompatActivity
 import com.walkud.app.R
+import com.walkud.app.common.exception.ExceptionHandle
 import com.walkud.app.common.extensions.closeKeyBoard
-import com.walkud.app.rx.transformer.EmptyTransformer
-import com.walkud.app.rx.transformer.ProgressTransformer
-import com.walkud.app.utils.CleanLeakUtils
-import com.zhy.m.permission.MPermissions
-import io.reactivex.ObservableTransformer
+import com.walkud.app.view.ProgressView
+import pub.devrel.easypermissions.EasyPermissions
+import java.lang.Exception
 
 /**
  * Activity 基类
  * Created by Zhuliya on 2018/11/7
  */
-abstract class MvcActivity : RxAppCompatActivity() {
+abstract class MvcActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks {
 
     var permissionFlag = false//权限设置跳转记录标记
 
@@ -81,6 +80,13 @@ abstract class MvcActivity : RxAppCompatActivity() {
     }
 
     /**
+     * 显示异常信息Toast
+     */
+    fun showExceptionToast(exception: Exception) {
+        showToast(ExceptionHandle.handleExceptionMsg(exception))
+    }
+
+    /**
      * 跳转
      * @param cls 类
      */
@@ -123,12 +129,23 @@ abstract class MvcActivity : RxAppCompatActivity() {
         finish()
     }
 
+    fun requestPermissions(requestCode: Int, rationale: String, vararg permissions: String) {
+        EasyPermissions.requestPermissions(
+            this, rationale,
+            requestCode, *permissions
+        )
+    }
+
     /**
-     * MPermissions 请求权限回调处理
+     * EasyPermissions 请求权限回调处理
      */
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        MPermissions.onRequestPermissionsResult(this, requestCode, permissions, grantResults)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<String>,
+        grantResults: IntArray
+    ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
     }
 
     /**
@@ -137,17 +154,17 @@ abstract class MvcActivity : RxAppCompatActivity() {
      */
     fun showPermissionDialog(permission: String) {
         AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setMessage(permission)
-                .setTitle(getString(R.string.string_help_text, permission))
-                .setPositiveButton("设置") { _, _ ->
-                    permissionFlag = true
-                    val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-                    intent.data = Uri.parse("package:$packageName")
-                    forward(intent)
-                }
-                .create()
-                .show()
+            .setCancelable(false)
+            .setMessage(permission)
+            .setTitle(getString(R.string.string_help_text, permission))
+            .setPositiveButton("设置") { _, _ ->
+                permissionFlag = true
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                intent.data = Uri.parse("package:$packageName")
+                forward(intent)
+            }
+            .create()
+            .show()
     }
 
     /**
@@ -157,26 +174,26 @@ abstract class MvcActivity : RxAppCompatActivity() {
     open fun recheckPermissions() {
     }
 
+    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
+    }
+
+    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
+    }
+
     /**
      * 获取异步进度加载事务，子类复写
      * 默认返回 默认进度框事务
      */
-    open fun <VT> getPrgressTransformer(): ObservableTransformer<VT, VT> = ProgressTransformer(this)
+    open fun getPrgressProgressView() = ProgressView.WaitDialgProgress(this, "")
 
     /**
      * 获取异步进度下拉或上拉加载事务，子类复写
      * 默认返回 空事务
      */
-    open fun <VT> getSmartRefreshTransformer(): ObservableTransformer<VT, VT> = EmptyTransformer()
+    open fun getSmartRefreshProgressView(): ProgressView = ProgressView.EMPTY
 
     /**
      * 获取进度、错误、内容切换View事务，子类复写
      */
-    open fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> = EmptyTransformer()
-
-    override fun onDestroy() {
-        //修复华为手机内存泄漏Bug
-        CleanLeakUtils.fixInputMethodManagerLeak(this)
-        super.onDestroy()
-    }
+    open fun getMultipleStatusProgressView(): ProgressView = ProgressView.EMPTY
 }

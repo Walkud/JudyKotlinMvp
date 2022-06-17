@@ -1,13 +1,14 @@
 package com.walkud.app.api
 
+import com.lemon.core.Api
+import com.lemon.core.ApiField
+import com.lemon.core.ApiPath
+import com.lemon.core.request.HttpMethod
+import com.walkud.app.net.space.LemonSpace
 import com.walkud.app.mvp.model.bean.AuthorInfoBean
 import com.walkud.app.mvp.model.bean.CategoryBean
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.model.bean.TabInfoBean
-import io.reactivex.Observable
-import retrofit2.http.GET
-import retrofit2.http.Query
-import retrofit2.http.Url
 
 /**
  * 后端 Api 接口
@@ -20,74 +21,74 @@ interface ApiService {
      * 首页精选
      * @param num
      */
-    @GET("v2/feed?")
-    fun getFirstHomeData(@Query("num") num: Int): Observable<HomeBean>
+    @Api("v2/feed?", method = HttpMethod.GET)
+    fun getFirstHomeData(@ApiField("num") num: Int): HomeBean
 
     /**
      * 根据 nextPageUrl 请求数据下一页数据
      * @param url
      */
-    @GET
-    fun getMoreHomeData(@Url url: String): Observable<HomeBean>
+    @Api("{url}", method = HttpMethod.GET)
+    fun getMoreHomeData(@ApiPath("url") url: String): HomeBean
 
     /**
      * 根据item id获取相关视频
      * @param id
      */
-    @GET("v4/video/related?")
-    fun getRelatedData(@Query("id") id: Long): Observable<HomeBean.Issue>
+    @Api("v4/video/related?", method = HttpMethod.GET)
+    fun getRelatedData(@ApiField("id") id: Long): LemonSpace<HomeBean.Issue>
 
     /**
      * 获取分类
      */
-    @GET("v4/categories")
-    fun getCategory(): Observable<ArrayList<CategoryBean>>
+    @Api("v4/categories", method = HttpMethod.GET)
+    fun getCategory(): LemonSpace<ArrayList<CategoryBean>>
 
     /**
      * 获取分类详情List
      * @param id
      */
-    @GET("v4/categories/videoList?")
-    fun getCategoryDetailList(@Query("id") id: Long): Observable<HomeBean.Issue>
+    @Api("v4/categories/videoList?", method = HttpMethod.GET)
+    fun getCategoryDetailList(@ApiField("id") id: Long): LemonSpace<HomeBean.Issue>
 
     /**
      * 获取更多的 Issue
      * @param url
      */
-    @GET
-    fun getIssueData(@Url url: String): Observable<HomeBean.Issue>
+    @Api("{url}", method = HttpMethod.GET)
+    fun getIssueData(@ApiPath("url") url: String): LemonSpace<HomeBean.Issue>
 
     /**
      * 获取全部排行榜的Info（包括，title 和 Url）
      */
-    @GET("v4/rankList")
-    fun getRankList(): Observable<TabInfoBean>
+    @Api("v4/rankList", method = HttpMethod.GET)
+    fun getRankList(): LemonSpace<TabInfoBean>
 
     /**
      * 获取搜索信息
      * @param words
      */
-    @GET("v1/search?&num=10&start=10")
-    fun getSearchData(@Query("query") words: String): Observable<HomeBean.Issue>
+    @Api("v1/search?&num=10&start=10", method = HttpMethod.GET)
+    fun getSearchData(@ApiField("query") words: String): LemonSpace<HomeBean.Issue>
 
     /**
      * 热门搜索词
      */
-    @GET("v3/queries/hot")
-    fun getHotWord(): Observable<ArrayList<String>>
+    @Api("v3/queries/hot", method = HttpMethod.GET)
+    fun getHotWord(): LemonSpace<ArrayList<String>>
 
     /**
      * 关注
      */
-    @GET("v4/tabs/follow")
-    fun getFollowInfo(): Observable<HomeBean.Issue>
+    @Api("v4/tabs/follow", method = HttpMethod.GET)
+    fun getFollowInfo(): LemonSpace<HomeBean.Issue>
 
     /**
      * 作者信息
      * @param id
      */
-    @GET("v4/pgcs/detail/tab?")
-    fun getAuthorInfo(@Query("id") id: Long): Observable<AuthorInfoBean>
+    @Api("v4/pgcs/detail/tab?", method = HttpMethod.GET)
+    fun getAuthorInfo(@ApiField("id") id: Long): LemonSpace<AuthorInfoBean>
 
 
 }

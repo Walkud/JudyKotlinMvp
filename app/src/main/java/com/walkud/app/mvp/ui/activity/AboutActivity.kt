@@ -21,6 +21,7 @@ class AboutActivity : MvcActivity() {
      * 初始化View
      */
     override fun initView(savedInstanceState: Bundle?) {
+
         StatusBarUtil.darkMode(this)
         StatusBarUtil.setPaddingSmart(this, toolbar)
 
@@ -39,7 +40,7 @@ class AboutActivity : MvcActivity() {
 
         //点击访问 GitHub
         relayout_gitHub.setOnClickListener {
-            val uri = Uri.parse("https://github.com/Walkud/JudyKotlinMvp")
+            val uri = Uri.parse("https://github.com/Walkud/KotlinMvp")
             val intent = Intent(Intent.ACTION_VIEW, uri)
             startActivity(intent)
         }

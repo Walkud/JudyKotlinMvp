@@ -73,10 +73,12 @@ dependencies {
     // Support库
     implementation rootProject.ext.supportLibs
     // 网络请求库
-    implementation rootProject.ext.networkLibs
-    // RxJava2
-    implementation rootProject.ext.rxJavaLibs
+    implementation rootProject.ext.lemon
+    implementation rootProject.ext.lemonLog
+    //    implementation rootProject.ext.lemonSpace//由于该项目未使用androidx，所以不能引用该库
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlin_coroutines"
     implementation rootProject.ext.otherLibs
+    implementation 'com.google.code.gson:gson:2.8.0'
     // APT dependencies(Kotlin内置的注解处理器)
     kapt rootProject.ext.annotationProcessorLibs
 
@@ -86,10 +88,6 @@ dependencies {
     }
     //kotlin 支持库
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    //GlideOkHttp
-    implementation(rootProject.ext.glideOkhttp) {
-        exclude group: 'glide-parent'
-    }
     //smartRefreshLayout 下拉刷新
     implementation 'com.scwang.smartrefresh:SmartRefreshLayout:1.0.3'
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.0.3'
@@ -107,19 +105,9 @@ dependencies {
     //腾讯 bugly
     implementation 'com.tencent.bugly:crashreport:2.6.6.1'
     //运行时权限
-    implementation 'com.zhy:mpermission-api:1.0.0'
-    kapt 'com.zhy:mpermission-compiler:1.0.0'
+    implementation 'pub.devrel:easypermissions:2.0.1'
     //BaseAdapter 提高列表开发效率
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.35'
-    implementation(rootProject.ext.rxLifecycle.rxlifecycle) {
-        exclude group: 'androidx.appcompat'
-    }
-    implementation(rootProject.ext.rxLifecycle.rxlifecycleAndroid) {
-        exclude group: 'androidx.appcompat'
-    }
-    implementation(rootProject.ext.rxLifecycle.rxlifecycleComponents) {
-        exclude group: 'androidx.appcompat'
-    }
 
     //Facebook内存泄漏检测库
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'

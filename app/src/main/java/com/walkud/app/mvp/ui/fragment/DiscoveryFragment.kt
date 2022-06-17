@@ -6,8 +6,8 @@ import com.walkud.app.R
 import com.walkud.app.common.ExtraKey
 import com.walkud.app.mvp.base.BaseFragmentAdapter
 import com.walkud.app.mvp.base.MvcFragment
+import com.walkud.app.utils.DisplayManager
 import com.walkud.app.utils.StatusBarUtil
-import com.walkud.app.view.TabLayoutHelper
 import kotlinx.android.synthetic.main.fragment_hot.*
 
 /**
@@ -42,7 +42,7 @@ class DiscoveryFragment : MvcFragment() {
          * getSupportFragmentManager() 替换为getChildFragmentManager()
          */
         mViewPager.adapter = BaseFragmentAdapter(childFragmentManager, fragments, tabList)
+        mViewPager.offscreenPageLimit = fragments.size
         mTabLayout.setupWithViewPager(mViewPager)
-        TabLayoutHelper.setUpIndicatorWidth(mTabLayout)
     }
 }

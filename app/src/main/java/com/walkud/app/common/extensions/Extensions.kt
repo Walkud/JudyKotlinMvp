@@ -2,10 +2,12 @@ package com.walkud.app.common.extensions
 
 import android.content.Context
 import android.view.View
+import com.hazz.kotlinmvp.net.exception.ErrorStatus
+import com.walkud.app.common.exception.ExceptionHandle
 
 /**
-* Created by xuhao on 2017/11/14.
-*/
+ * Created by xuhao on 2017/11/14.
+ */
 
 fun View.dip2px(dipValue: Float): Int {
     val scale = this.resources.displayMetrics.density
@@ -49,6 +51,8 @@ fun Context.dataFormat(total: Long): String {
     }
     return result
 }
+
+fun Exception.isNetworkError() = ExceptionHandle.isExceptionCode(this, ErrorStatus.NETWORK_ERROR)
 
 
 

@@ -1,13 +1,10 @@
 package com.walkud.app.mvp.presenter
 
-import com.trello.rxlifecycle2.android.FragmentEvent
 import com.walkud.app.common.ExtraKey
 import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
-import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.ui.fragment.RankFragment
-import com.walkud.app.rx.RxSubscribe
-import com.walkud.app.rx.transformer.NetTransformer
+import com.walkud.app.net.space.bindUi
 
 /**
  * 热门-排行Presenter
@@ -28,8 +25,6 @@ class RankPresenter : BasePresenter<RankFragment, MainModel>() {
             view.backward()
             return
         }
-
-        queryRankList()
     }
 
 
@@ -38,15 +33,8 @@ class RankPresenter : BasePresenter<RankFragment, MainModel>() {
      */
     fun queryRankList() {
         model.getHotRankData(apiUrl!!)
-                .compose(NetTransformer())
-                .compose(view.getMultipleStatusViewTransformer())
-                .compose(bindFragmentUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(object : RxSubscribe<HomeBean.Issue>() {
-
-                    override fun call(result: HomeBean.Issue) {
-                        view.updateListUi(result.itemList)
-                    }
-                })
+            .bindUi(view.getMultipleStatusProgressView(), view)
+            .request { view.updateListUi(it.itemList) }
     }
 
 }

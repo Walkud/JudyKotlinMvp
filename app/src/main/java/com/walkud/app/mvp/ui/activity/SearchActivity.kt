@@ -16,8 +16,10 @@ import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.google.android.flexbox.*
+import com.hazz.kotlinmvp.net.exception.ErrorStatus
 import com.walkud.app.R
 import com.walkud.app.common.extensions.closeKeyBoard
+import com.walkud.app.common.extensions.isNetworkError
 import com.walkud.app.common.extensions.openKeyBoard
 import com.walkud.app.mvp.base.MvpActivity
 import com.walkud.app.mvp.model.bean.HomeBean
@@ -39,13 +41,20 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
     private var loadingMore = false
     private val listAdapter: CategoryDetailAdapter = CategoryDetailAdapter()
 
-    override fun getP() = SearchPresenter().apply { view = this@SearchActivity }
+    override fun getP(): SearchPresenter = SearchPresenter().apply { view = this@SearchActivity }
 
     override fun getLayoutId() = R.layout.activity_search
 
+    private val layoutManager by lazy {
+        LinearLayoutManager(this)
+    }
+
     init {
         //细黑简体字体
-        mTextTypeface = Typeface.createFromAsset(ContextUtil.getContext().assets, "fonts/FZLanTingHeiS-L-GB-Regular.TTF")
+        mTextTypeface = Typeface.createFromAsset(
+            ContextUtil.getContext().assets,
+            "fonts/FZLanTingHeiS-L-GB-Regular.TTF"
+        )
     }
 
     override fun initView(savedInstanceState: Bundle?) {
@@ -54,7 +63,7 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
         tv_title_tip.typeface = mTextTypeface
         tv_hot_search_words.typeface = mTextTypeface
         //初始化查询结果的 RecyclerView
-        mRecyclerView_result.layoutManager = LinearLayoutManager(this)
+        mRecyclerView_result.layoutManager = layoutManager
         mRecyclerView_result.adapter = listAdapter
 
         //状态栏透明和间距处理
@@ -88,7 +97,7 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun setUpEnterAnimation() {
         val transition = TransitionInflater.from(this)
-                .inflateTransition(R.transition.arc_motion)
+            .inflateTransition(R.transition.arc_motion)
         window.sharedElementEnterTransition = transition
         transition.addListener(object : Transition.TransitionListener {
             override fun onTransitionStart(transition: Transition) {
@@ -142,17 +151,17 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun animateRevealShow() {
         ViewAnimUtils.animateRevealShow(
-                this, rel_frame,
-                fab_circle.width / 2, R.color.backgroundColor,
-                object : ViewAnimUtils.OnRevealAnimationListener {
-                    override fun onRevealHide() {
+            this, rel_frame,
+            fab_circle.width / 2, R.color.backgroundColor,
+            object : ViewAnimUtils.OnRevealAnimationListener {
+                override fun onRevealHide() {
 
-                    }
+                }
 
-                    override fun onRevealShow() {
-                        setUpView()
-                    }
-                })
+                override fun onRevealShow() {
+                    setUpView()
+                }
+            })
     }
 
     /**
@@ -163,10 +172,10 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
 
         //实现自动加载
         mRecyclerView_result.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-            override fun onScrollStateChanged(recyclerView: RecyclerView?, newState: Int) {
+            override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                 super.onScrollStateChanged(recyclerView, newState)
-                val itemCount = mRecyclerView_result.layoutManager.itemCount
-                val lastVisibleItem = (mRecyclerView_result.layoutManager as LinearLayoutManager).findLastVisibleItemPosition()
+                val itemCount = layoutManager.itemCount
+                val lastVisibleItem = layoutManager.findLastVisibleItemPosition()
                 if (!loadingMore && lastVisibleItem == (itemCount - 1)) {
                     loadingMore = true
                     presenter.loadMoreData()
@@ -193,11 +202,23 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
 
         })
 
-        listAdapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            val item = adapter.getItem(position) as HomeBean.Issue.Item
-            VideoDetailActivity.startActivity(this@SearchActivity, view, item)
-        }
+        listAdapter.onItemClickListener =
+            BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+                val item = adapter.getItem(position) as HomeBean.Issue.Item
+                VideoDetailActivity.startActivity(this@SearchActivity, view, item)
+            }
 
+    }
+
+    /**
+     * 显示错误信息
+     */
+    fun showErrorUi(e:Exception) {
+        if (e.isNetworkError()) {
+            multipleStatusView.showNoNetwork()
+        } else {
+            multipleStatusView.showError()
+        }
     }
 
     /**
@@ -208,7 +229,8 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
 
         hideHotWordView()
         tv_search_count.visibility = View.VISIBLE
-        tv_search_count.text = String.format(resources.getString(R.string.search_result_count), keyWords, issue.total)
+        tv_search_count.text =
+            String.format(resources.getString(R.string.search_result_count), keyWords, issue.total)
 
         listAdapter.setNewData(issue.itemList)
     }
@@ -256,11 +278,12 @@ class SearchActivity : MvpActivity<SearchPresenter>() {
         mRecyclerView_hot.adapter = hotKeywordsAdapter
 
         //设置热门关键词点击事件
-        hotKeywordsAdapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
-            closeKeyBoard(et_search_view)
-            val keyWord = adapter.getItem(position) as String
-            presenter.querySearchResult(keyWord)
-        }
+        hotKeywordsAdapter.onItemClickListener =
+            BaseQuickAdapter.OnItemClickListener { adapter, view, position ->
+                closeKeyBoard(et_search_view)
+                val keyWord = adapter.getItem(position) as String
+                presenter.querySearchResult(keyWord)
+            }
     }
 
 }

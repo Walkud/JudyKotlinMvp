@@ -8,9 +8,8 @@ import com.walkud.app.mvp.base.MvpActivity
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.presenter.WatchHistoryPresenter
 import com.walkud.app.mvp.ui.adapter.WatchHistoryAdapter
-import com.walkud.app.rx.transformer.MultipleStatusViewTransformer
 import com.walkud.app.utils.StatusBarUtil
-import io.reactivex.ObservableTransformer
+import com.walkud.app.view.ProgressView
 import kotlinx.android.synthetic.main.layout_watch_history.*
 import java.util.*
 
@@ -26,12 +25,7 @@ class WatchHistoryActivity : MvpActivity<WatchHistoryPresenter>() {
 
     override fun getLayoutId() = R.layout.layout_watch_history
 
-    /**
-     * 获取进度、错误、内容切换View事务
-     */
-    override fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> {
-        return MultipleStatusViewTransformer(multipleStatusView)
-    }
+    override fun getMultipleStatusProgressView() = ProgressView.MultipleStatusProgress(multipleStatusView)
 
     /**
      * 初始化View

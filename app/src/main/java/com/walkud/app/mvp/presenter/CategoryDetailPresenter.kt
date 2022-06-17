@@ -1,14 +1,13 @@
 package com.walkud.app.mvp.presenter
 
 import com.walkud.app.common.ExtraKey
-import com.walkud.app.common.exception.ExceptionHandle
 import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
 import com.walkud.app.mvp.model.bean.CategoryBean
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.ui.activity.CategoryDetailActivity
-import com.walkud.app.rx.RxSubscribe
-import com.walkud.app.rx.transformer.NetTransformer
+import com.walkud.app.net.space.bindUi
+import com.walkud.app.view.ProgressView
 
 /**
  * 分类详情列表Presenter
@@ -42,16 +41,12 @@ class CategoryDetailPresenter : BasePresenter<CategoryDetailActivity, MainModel>
      */
     fun queryCategoryDetailList() {
         model.getCategoryDetailList(categoryData.id)
-                .compose(NetTransformer())
-                .compose(view.getMultipleStatusViewTransformer())
-                .compose(bindUntilOnDestroyEvent())
-                .subscribe(object : RxSubscribe<HomeBean.Issue>() {
-                    override fun call(result: HomeBean.Issue) {
-                        issue = result
-                        nextPageUrl = result.nextPageUrl
-                        view.updateListUi(issue!!)
-                    }
-                })
+            .bindUi(view.getMultipleStatusProgressView(), view)
+            .request {
+                issue = it
+                nextPageUrl = it.nextPageUrl
+                view.updateListUi(issue!!)
+            }
     }
 
 
@@ -60,20 +55,12 @@ class CategoryDetailPresenter : BasePresenter<CategoryDetailActivity, MainModel>
      */
     fun queryMoreCategoryData() {
         model.getMoreCategoryData(nextPageUrl!!)
-                .compose(NetTransformer())
-                .compose(bindUntilOnDestroyEvent())
-                .subscribe(object : RxSubscribe<HomeBean.Issue>() {
-
-                    override fun call(result: HomeBean.Issue) {
-                        issue!!.itemList.addAll(result.itemList)
-                        view.updateListUi(issue!!)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        super.onError(e)
-                        view.showToast(ExceptionHandle.handleExceptionMsg(e))
-                    }
-                })
+            .bindUi(ProgressView.EMPTY, view)
+            .doError { view.showExceptionToast(it) }
+            .request {
+                issue!!.itemList.addAll(it.itemList)
+                view.updateListUi(issue!!)
+            }
     }
 
 }

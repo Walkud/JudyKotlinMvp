@@ -5,9 +5,8 @@ import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
 import com.walkud.app.mvp.model.bean.HomeBean
 import com.walkud.app.mvp.ui.activity.SearchActivity
-import com.walkud.app.rx.RxSubscribe
-import com.walkud.app.rx.transformer.NetTransformer
-import com.walkud.app.rx.transformer.ProgressTransformer
+import com.walkud.app.net.space.bindUi
+import com.walkud.app.view.ProgressView
 
 /**
  * 搜索Presenter
@@ -24,18 +23,12 @@ class SearchPresenter : BasePresenter<SearchActivity, MainModel>() {
      */
     fun queryHotWordData() {
         model.getHotWordData()
-                .compose(NetTransformer())
-                .compose(bindUntilOnDestroyEvent())
-                .subscribe(object : RxSubscribe<ArrayList<String>>() {
-                    override fun call(result: ArrayList<String>) {
-                        view.setHotWordData(result)
-                    }
-
-                    override fun onError(e: Throwable) {
-                        super.onError(e)
-                        view.showToast(ExceptionHandle.handleExceptionMsg(e))
-                    }
-                })
+            .bindUi(ProgressView.EMPTY, view)
+            .doError {
+                view.showExceptionToast(it)
+                view.showErrorUi(it)
+            }
+            .request { view.setHotWordData(it) }
     }
 
     /**
@@ -45,24 +38,20 @@ class SearchPresenter : BasePresenter<SearchActivity, MainModel>() {
         keyWords = keyStr
 
         model.getSearchResult(keyWords!!)
-                .compose(NetTransformer())
-                .compose(ProgressTransformer(view))
-                .compose(bindUntilOnDestroyEvent())
-                .subscribe(object : RxSubscribe<HomeBean.Issue>() {
-                    override fun call(result: HomeBean.Issue) {
-                        issue = result
-                        if (result.count > 0 && result.itemList.size > 0) {
-                            nextPageUrl = result.nextPageUrl
-                            view.updateSearchResultUi(result, keyStr)
-                        } else
-                            view.setEmptyView()
-                    }
-
-                    override fun onError(e: Throwable) {
-                        super.onError(e)
-                        view.showToast(ExceptionHandle.handleExceptionMsg(e))
-                    }
-                })
+            .bindUi(view.getPrgressProgressView(), view)
+            .doError {
+                view.showExceptionToast(it)
+                view.showErrorUi(it)
+            }
+            .request {
+                issue = it
+                if (it.count > 0 && it.itemList.size > 0) {
+                    nextPageUrl = it.nextPageUrl
+                    view.updateSearchResultUi(it, keyStr)
+                } else {
+                    view.setEmptyView()
+                }
+            }
     }
 
     /**
@@ -70,14 +59,12 @@ class SearchPresenter : BasePresenter<SearchActivity, MainModel>() {
      */
     fun loadMoreData() {
         model.getSearchIssueData(nextPageUrl!!)
-                .compose(NetTransformer())
-                .compose(bindUntilOnDestroyEvent())
-                .subscribe(object : RxSubscribe<HomeBean.Issue>() {
-                    override fun call(result: HomeBean.Issue) {
-                        issue!!.itemList.addAll(result.itemList)
-                        nextPageUrl = result.nextPageUrl
-                        view.updateSearchResultUi(issue!!, keyWords!!)
-                    }
-                })
+            .bindUi(ProgressView.EMPTY, view)
+            .doError { view.showErrorUi(it) }
+            .request {
+                issue!!.itemList.addAll(it.itemList)
+                nextPageUrl = it.nextPageUrl
+                view.updateSearchResultUi(issue!!, keyWords!!)
+            }
     }
 }

@@ -7,16 +7,18 @@ import android.support.v7.widget.GridLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.chad.library.adapter.base.BaseQuickAdapter
+import com.hazz.kotlinmvp.net.exception.ErrorStatus
 import com.walkud.app.R
 import com.walkud.app.common.ExtraKey
+import com.walkud.app.common.exception.ExceptionHandle
+import com.walkud.app.common.extensions.isNetworkError
 import com.walkud.app.mvp.base.MvpFragment
 import com.walkud.app.mvp.model.bean.CategoryBean
 import com.walkud.app.mvp.presenter.CategoryPresenter
 import com.walkud.app.mvp.ui.activity.CategoryDetailActivity
 import com.walkud.app.mvp.ui.adapter.CategoryAdapter
-import com.walkud.app.rx.transformer.MultipleStatusViewTransformer
 import com.walkud.app.utils.DisplayManager
-import io.reactivex.ObservableTransformer
+import com.walkud.app.view.ProgressView
 import kotlinx.android.synthetic.main.fragment_category.*
 
 /**
@@ -44,12 +46,19 @@ class CategoryFragment : MvpFragment<CategoryPresenter>() {
         mRecyclerView.layoutManager = GridLayoutManager(activity, 2)
 
         mRecyclerView.addItemDecoration(object : RecyclerView.ItemDecoration() {
-            override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State?) {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
                 val position = parent.getChildPosition(view)
                 val offset = DisplayManager.dip2px(2f)!!
 
-                outRect.set(if (position % 2 == 0) 0 else offset, offset,
-                        if (position % 2 == 0) offset else 0, offset)
+                outRect.set(
+                    if (position % 2 == 0) 0 else offset, offset,
+                    if (position % 2 == 0) offset else 0, offset
+                )
             }
 
         })
@@ -61,25 +70,22 @@ class CategoryFragment : MvpFragment<CategoryPresenter>() {
     override fun addListener() {
         super.addListener()
 
-        categoryAdapter.onItemClickListener = BaseQuickAdapter.OnItemClickListener { adapter, _, position ->
-            val data = adapter.getItem(position) as CategoryBean
-            val intent = Intent(activity, CategoryDetailActivity::class.java)
-            intent.putExtra(ExtraKey.CATEGORY_DATA, data)
-            startActivity(intent)
-        }
+        categoryAdapter.onItemClickListener =
+            BaseQuickAdapter.OnItemClickListener { adapter, _, position ->
+                val data = adapter.getItem(position) as CategoryBean
+                val intent = Intent(activity, CategoryDetailActivity::class.java)
+                intent.putExtra(ExtraKey.CATEGORY_DATA, data)
+                startActivity(intent)
+            }
 
         //异常布局，点击重新加载
-        multipleStatusView.setOnRetryClickListener {
+        multipleStatusView.setOnClickListener {
             presenter.queryCategoryData()
         }
     }
 
-    /**
-     * 获取进度、错误、内容切换View事务
-     */
-    override fun <VT> getMultipleStatusViewTransformer(): ObservableTransformer<VT, VT> {
-        return MultipleStatusViewTransformer(multipleStatusView)
-    }
+    override fun getMultipleStatusProgressView() =
+        ProgressView.MultipleStatusProgress(multipleStatusView)
 
     /**
      * 懒加载数据
@@ -94,5 +100,16 @@ class CategoryFragment : MvpFragment<CategoryPresenter>() {
      */
     fun updateListUi(categoryList: ArrayList<CategoryBean>) {
         categoryAdapter.setNewData(categoryList)
+    }
+
+    /**
+     * 显示错误UI
+     */
+    fun showErrorUi(e: Exception) {
+        if (e.isNetworkError()) {
+            multipleStatusView?.showNoNetwork()
+        } else {
+            multipleStatusView?.showError()
+        }
     }
 }

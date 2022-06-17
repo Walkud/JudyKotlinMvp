@@ -1,12 +1,10 @@
 package com.walkud.app.mvp.presenter
 
-import com.trello.rxlifecycle2.android.FragmentEvent
+import com.walkud.app.common.exception.ExceptionHandle
 import com.walkud.app.mvp.base.BasePresenter
 import com.walkud.app.mvp.model.MainModel
-import com.walkud.app.mvp.model.bean.CategoryBean
 import com.walkud.app.mvp.ui.fragment.CategoryFragment
-import com.walkud.app.rx.RxSubscribe
-import com.walkud.app.rx.transformer.NetTransformer
+import com.walkud.app.net.space.bindUi
 
 /**
  * 发现-分类Presenter
@@ -19,15 +17,13 @@ class CategoryPresenter : BasePresenter<CategoryFragment, MainModel>() {
      */
     fun queryCategoryData() {
         model.getCategoryData()
-                .compose(NetTransformer())
-                .compose(view.getMultipleStatusViewTransformer())
-                .compose(bindFragmentUntilEvent(FragmentEvent.DESTROY))
-                .subscribe(object : RxSubscribe<ArrayList<CategoryBean>>() {
-                    override fun call(result: ArrayList<CategoryBean>) {
-                        //更新UI列表
-                        view.updateListUi(result)
-                    }
-                })
+            .bindUi(view.getMultipleStatusProgressView(), view)
+            .doError { //处理错误
+                view.showErrorUi(it)
+            }
+            .request { //更新UI列表
+                view.updateListUi(it)
+            }
     }
 
 
