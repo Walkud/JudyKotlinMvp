@@ -3,7 +3,6 @@ package com.walkud.app
 import android.app.Application
 import android.content.Context
 import android.support.multidex.MultiDex
-import com.squareup.leakcanary.LeakCanary
 import com.walkud.app.utils.ContextUtil
 import com.walkud.app.utils.DisplayManager
 import com.walkud.app.utils.MLog
@@ -21,14 +20,6 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-
-        if (LeakCanary.isInAnalyzerProcess(this)) {
-            // This process is dedicated to LeakCanary for heap analysis.
-            // You should not init your app in this process.
-            return
-        }
-        LeakCanary.install(this)
-
         ContextUtil.setContext(this)
 
         MLog.init()//初始化日志

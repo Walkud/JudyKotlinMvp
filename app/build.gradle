@@ -108,11 +108,6 @@ dependencies {
     implementation 'pub.devrel:easypermissions:2.0.1'
     //BaseAdapter 提高列表开发效率
     implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:2.9.35'
-
-    //Facebook内存泄漏检测库
-    debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.6.2'
-    releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.6.2'
-    // Optional, if you use support library fragments:
-    debugImplementation 'com.squareup.leakcanary:leakcanary-support-fragment:1.6.2'
-
+    //Square leakcanary
+    debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.9.1'
 }

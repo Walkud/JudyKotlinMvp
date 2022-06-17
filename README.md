@@ -14,6 +14,8 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
 
 [Kotlin + Mvp + RxJava + Retrofit 心得体会](https://www.jianshu.com/p/4cb1a56acf9e)
 
+2022 年 6 月已使用 Lemon 库替换掉了 RxJava + Retrofit +OkHttp，并修复了一些已知逻辑问题。
+
 
 ## 解决痛点
 
@@ -25,13 +27,13 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
 项目中创建 M 实例是用的Java反射，省去在各业务的 P 中单独创建,由于 Kotlin 反射需要额外的依赖，重要的是 Kotlin 反射是相当的慢，官方的说法的暂时不会去优化,所以在项目中添加了 Java 的反射代码。
 
 #### 异步导致的内存泄漏
-异步时间过长而界面已退出，回调中依然隐式的持有 Activity 实例，这个问题在开发中很常见，所以本项目中使用了 RxJava (异步利器)来处理异步问题，由于它的灵活性，在加上另外一位大神开源库 [RxLifecycle](https://github.com/trello/RxLifecycle) 可以很方便的处理这个问题，而且使代码也非常美观，最重要的是处理时机可控(比如在 onStop 或 onDestory )。
+异步时间过长而界面已退出，回调中依然隐式的持有 Activity 实例，这个问题在开发中很常见，<del>所以本项目中使用了 RxJava (异步利器)来处理异步问题，由于它的灵活性，在加上另外一位大神开源库 [RxLifecycle](https://github.com/trello/RxLifecycle) 可以很方便的处理这个问题，而且使代码也非常美观，最重要的是处理时机可控(比如在 onStop 或 onDestory )。</del> 本项目使用 Lemon 提供的 LemonSpace 来处理这个问题，代码使用简单，处理时机可控。
 
 项目BasePresenter中的 view 没有允许为空，所以在 onDestory中并没有去置空view, 这里的实现方式也一定差别，异步的情况按上述方式进行控制可以有效的避免内存泄漏问题。
 
 #### 进度UI的控制
 
-在异步加载时一般都需要显示一个进度 UI 告知用户等待，而且一般都会有多种进度，比如下拉刷新、上拉加载、提交进度、布局内嵌入的进度条等，通常的做法是请求发起前调用进度显示，异步回调后，隐藏或关闭进度，使用了 RxJava 后使用自定义 ObservableTransformer 可以很好的解决控制问题，使代码逻辑进一步简洁美观，最重要的是在复杂的业务中，尽可能的避免关闭时机错误的 Bug。
+在异步加载时一般都需要显示一个进度 UI 告知用户等待，而且一般都会有多种进度，比如下拉刷新、上拉加载、提交进度、布局内嵌入的进度条等，通常的做法是请求发起前调用进度显示，异步回调后，隐藏或关闭进度，<del>使用了 RxJava 后使用自定义 ObservableTransformer 可以很好的解决控制问题</del> 本项目使用 Lemon 提供的 LemonSpace 来控制请求进度显示与隐藏、内容布局切换，代码逻辑简洁美观，最重要的是在复杂的业务中，尽可能的避免关闭时机错误的 Bug。
 
 
 [参考 ProgressTransformer](./app/src/main/java/com/walkud/app/rx/transformer/ProgressTransformer.kt)
@@ -52,10 +54,8 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
 
 ## 接入的第三方开源库
 
- - [RxJava](https://github.com/ReactiveX/RxJava)
- - [RxAndroid](https://github.com/ReactiveX/RxAndroid)
- - [RxLifecycle](https://github.com/trello/RxLifecycle)
- - [Retrofit](https://github.com/square/retrofit)
+ - [Lemon](https://github.com/Walkud/Lemon)
+ - [EasyPermissions](https://github.com/googlesamples/easypermissions)
  - [Glide](https://github.com/bumptech/glide)
  - [Logger](https://github.com/orhanobut/logger)
  - [FlycoTabLayout](https://github.com/H07000223/FlycoTabLayout)
@@ -64,8 +64,8 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
  - [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout)
  - [BGABanner-Android](https://github.com/bingoogolapple/BGABanner-Android)
  - [GSYVideoPlayer](https://github.com/CarGuo/GSYVideoPlayer)
- - [MPermissions](https://github.com/hongyangAndroid/MPermissions)
  - [BaseRecyclerViewAdapterHelper](https://github.com/CymChad/BaseRecyclerViewAdapterHelper)
+ - [LeakCanary](https://github.com/square/leakcanary)
 
 ## 声明
 **项目中的 API 均来自开眼视频，纯属学习交流使用，不得用于商业用途！**
