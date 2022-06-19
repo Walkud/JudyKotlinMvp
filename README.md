@@ -16,8 +16,7 @@ Kotlin 出来这么久了，现在才把自己平时 Java 的开发方式过渡�
 
 [Kotlin + Mvp + RxJava + Retrofit 心得体会](https://www.jianshu.com/p/4cb1a56acf9e)
 
-2022 年 6 月已使用 Lemon 库替换掉了 RxJava + Retrofit +OkHttp，并修复了一些已知逻辑问题。
-
+2022 年 6 月已使用 [Lemon](https://github.com/Walkud/Lemon) 库替换掉了 RxJava + Retrofit +OkHttp，并修复了一些已知逻辑问题。
 
 ## 解决痛点
 
