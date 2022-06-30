@@ -16,7 +16,7 @@ ext {
             rxJava                  : "2.1.17",
             rxAndroid               : "2.0.2",
             rxLifecycle             : "2.2.2",
-            lemonSdkVersion         : "0.1.2"
+            lemonSdkVersion         : "0.1.3"
     ]
 
     supportDeps = [
